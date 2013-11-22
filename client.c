@@ -37,7 +37,7 @@ int main(void) {
 
     char *db = "asenovh";
     char *usr = "asenovh";
-    char *pwd = "0920";
+    char *pwd = "0920";  // lol, now everybody on github can see my password
 
     char qbuffer[200];
 
