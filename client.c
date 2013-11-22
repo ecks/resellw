@@ -35,14 +35,14 @@ int main(void) {
     MYSQL_RES *res;
     MYSQL_ROW row;
 
-    char *db = "jothki";
-    char *usr = "jothki";
-    char *pwd = "ghost123";
+    char *db = "asenovh";
+    char *usr = "asenovh";
+    char *pwd = "0920";
 
     char qbuffer[200];
 
     mysql_init(&mysql);
-    if (!(sock = mysql_real_connect(&mysql,"cisc437.acad.cis.udel.edu",usr,pwd,db,0,NULL,0))) {
+    if (!(sock = mysql_real_connect(&mysql,"localhost",usr,pwd,db,0,NULL,0))) {
         fprintf(stderr,"Couldn't connect to engine!\n%s\n\n",mysql_error(&mysql));
         perror("");
         exit(1);
