@@ -1,18 +1,114 @@
 #include <stdlib.h>
+#include <stddef.h>
+#include <stdbool.h>
 
 #include "io.h"
+#include "util.h"
+#include "list.h"
 #include "menu.h"
+#include "room.h"
+#include "item.h"
 
 // items start
 
 void menu_items_add()
 {
+  char * upc;
+  char * desc;
+  char * quantity;
+  char * purchase_price;
+  
+  char * serial_num;
+  char * electronic_type;
+  char * model;
+
+  char * clothing_brand;
+  char * size;
+
+  char * bathbody_brand;
+  char * feature;
+
+  char * details;
+  unsigned int detail_type; 
+
+  printf("UPC: ");
+  upc = getline();
+  printf("Description: ");
+  desc = getline();
+  printf("Quantity: ");
+  quantity = getline();
+  printf("Purchase Price: ");
+  purchase_price = getline();
+
+  printf("Do you want to add additional details? (y/n) ");
+  details = getline();
+  if(strcmp(details, "y") == 0)
+  {
+    printf("Choose for the type of details you want to provide for the item:\n");
+    printf("1) Electronics\n");
+    printf("2) Clothing\n");
+    printf("3) Bath and Body\n");
+    detail_type = getchoice();
+
+    switch(detail_type)
+    {
+      case 1:
+        printf("Serial Number: ");
+        serial_num = getline();
+        printf("Electronic Type: ");
+        electronic_type = getline();
+        printf("Model: ");
+        model = getline();
+        item_electronics_add(upc, desc, quantity, purchase_price, serial_num, electronic_type, model);
+        break;
+
+      case 2:
+        printf("Clothing Brand: ");
+        clothing_brand = getline();
+        printf("Size: ");
+        size = getline();
+        item_clothing_add(upc, desc, quantity, purchase_price, clothing_brand, size);
+        break;
+
+      case 3:
+        printf("Bath and Body Brand: ");
+        bathbody_brand = getline();
+        printf("Bath and Body Feature: ");
+        feature = getline();
+        item_bathbody_add(upc, desc, quantity, purchase_price, bathbody_brand, feature);
+        break;
+ 
+      default:
+        printf("Unrecognized\n");
+        break;
+    }
+  }
+  else if(strcmp(details, "n") == 0)
+  {
+    item_add(upc, desc, quantity, purchase_price, NULL);
+  }      
 
 }
 
 void menu_items_modify()
 {
+  struct items * items;
+  char * show_info;
 
+  printf("Do you want to show detailed information about each item? (y/n) ");
+  show_info = getline();
+  if(strcmp(show_info, "y") == 0)
+  {
+    items = items_get_all_detailed();
+  }
+  else if(strcmp(show_info, "n") == 0)
+  {
+    items = items_get_all();
+  }
+  else
+  {
+    printf("Unrecognized input\n");
+  }
 }
 
 void menu_items_delete()
@@ -35,12 +131,52 @@ void menu_rooms_add()
 
 void menu_rooms_modify()
 {
-
+/*  struct rooms * rooms = rooms_get_all();
+  int i = 1;
+  struct room * room;
+  LIST_FOR_EACH(room, struct room, node, &rooms->room_list)
+  {
+    printf("%d) Room %s\n", i, room->desc);
+  }
+  printf("Please select the Room you want to modify\n"); */
 }
 
 void menu_rooms_delete()
 {
+  struct rooms * rooms = rooms_get_all();
+  int i = 1;
+  struct room * room;
+  unsigned int choice;
 
+  LIST_FOR_EACH(room, struct room, node, &rooms->room_list)
+  {
+    printf("%d) Room %s", i, room->desc);
+    i++;
+  }
+  printf("%d) All Rooms\n", i);
+  printf("Please select the Room you want to delete: ");
+  if((choice = getchoice()) == 0)
+    printf("No line\n");
+  else
+  {
+    if(choice == i)
+    {
+      rooms_delete(rooms);
+    }
+    else
+    {
+      int j = 1;
+      LIST_FOR_EACH(room, struct room, node, &rooms->room_list)
+      {
+        if(choice == j)
+        {
+          room_delete(room);
+          break;
+        } 
+        j++;
+      }
+    }
+  }
 }
 
 // rooms end

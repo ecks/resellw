@@ -25,8 +25,6 @@ int db_init()
   mysql.reconnect = 1;
 
   sprintf(qbuffer,"use %s", db);
-  printf(qbuffer);
-  printf("\n");
   if(mysql_query(sock, qbuffer)) 
   {
     fprintf(stderr, "Query failed (%s)\n",mysql_error(sock));

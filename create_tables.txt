@@ -1,0 +1,18 @@
+Room table:
+create TABLE Room (room_id INTEGER NOT NULL AUTO_INCREMENT, room_description VARCHAR(30) NOT NULL, PRIMARY KEY(room_id)); 
+
+Item table:
+create TABLE Item (iid INTEGER NOT NULL AUTO_INCREMENT, upc VARCHAR(30) NOT NULL, description VARCHAR(30) NOT NULL, quantity INTEGER NOT NULL, purchase_price NUMERIC(4,2), PRIMARY KEY (iid));
+create TABLE Item (iid INTEGER NOT NULL AUTO_INCREMENT, upc VARCHAR(30) NOT NULL, description VARCHAR(30) NOT NULL, quantity INTEGER NOT NULL, purchase_price NUMERIC(4,2), detail ENUM('elec', 'clothing', 'bathbody'), PRIMARY KEY (iid));
+
+Store table:
+create table Store (iid INTEGER, room_id INTEGER, PRIMARY KEY (iid), FOREIGN KEY (iid) REFERENCES Item ON DELETE CASCADE, FOREIGN KEY (room_id) REFERENCES room_id ON DELETE CASCADE);
+
+Electronics table:
+ create table Electronics (iid INTEGER PRIMARY KEY, serial_number VARCHAR(30), electronic_type VARCHAR(30), model VARCHAR(30) NOT NULL, FOREIGN KEY (iid) REFERENCES Item ON DELETE CASCADE);
+
+Clothing table:
+create table Clothing (iid INTEGER PRIMARY KEY, clothing_brand VARCHAR(30), size VARCHAR(10), FOREIGN KEY (iid) REFERENCES Item ON DELETE CASCADE);
+
+BathBody table:
+create table BathBody (iid INTEGER PRIMARY KEY, bathbody_brand VARCHAR(30), feature VARCHAR(30), FOREIGN KEY (iid) REFERENCES Item ON DELETE CASCADE);

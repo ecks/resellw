@@ -6,4 +6,6 @@
 #define CONTAINER_OF(POINTER, STRUCT, MEMBER)                           \
           ((STRUCT *) (void *) ((char *) (POINTER) - offsetof (STRUCT, MEMBER)))
 
+#define BUF_LEN 200
+
 #endif

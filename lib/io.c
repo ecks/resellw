@@ -18,6 +18,9 @@ char * getline(void)
         if(c == EOF)
             break;
 
+        if(c == '\n')
+          break;
+
         if(--len == 0) {
             len = lenmax;
             char * linen = realloc(linep, lenmax *= 2);
