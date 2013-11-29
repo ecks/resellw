@@ -50,9 +50,11 @@ extern int item_bathbody_add(char * upc, char * description, char * quantity, ch
 
 extern struct items * items_get_all();
 extern struct items * items_get_all_detailed();
+extern struct items * items_get_upc(char * upc);
 extern struct items * items_get(char * upc, char * description, char * quantity, char * purchase_price);
 extern struct item * item_get(char * upc, char * description, char * quantity, char * purchase_price);
 extern struct electronics * item_electronics_get(char * upc, char * description, char * quantity, char * purchase_price);
+extern struct items * items_electronics_get_model(char * model);
 
 extern int item_delete(struct item * item);
 extern int item_electronics_delete(struct electronics * elec);

@@ -3,7 +3,7 @@ CXX = g++
 CFLAGS = -ggdb -m32 -I/usr/local/mysql/include/mysql -I. -I./lib
 LIBS = -L/usr/local/mysql/lib/mysql -lmysqlclient
 EXECUTABLE = client admin
-SRCS = menu.c item.c room.c price.c io.c list.c db.c store.c listing.c
+SRCS = menu_common.c admin_menu.c client_menu.c item.c room.c price.c io.c list.c db.c store.c listing.c
 OBJECTS = ${SRCS:.c=.o}
 VPATH = ./lib
 
@@ -13,8 +13,8 @@ LIBS_CPPUTEST = -L/usa/hasenov/cpputest_lib/lib -lstdc++ -lCppUTest -lCppUTestEx
 
 all: ${EXECUTABLE}
 
-client:
-	${CC} ${CFLAGS} -o $@ client.c ${LIBS}
+client: client.o ${OBJECTS}
+	${CC} ${CFLAGS} -o $@ client.c ${OBJECTS} ${LIBS}
 
 admin: admin.o ${OBJECTS}
 	${CC} ${CFLAGS} -o $@ admin.o ${OBJECTS} ${LIBS}
@@ -22,7 +22,13 @@ admin: admin.o ${OBJECTS}
 test: all 
 	${CXX} $(CFLAGS_CPPUTEST) -o $@ tests/database_test_run.cpp tests/database_test.cpp ${OBJECTS} $(LIBS_CPPUTEST)
 
-menu.o: menu.c
+menu_common.o: menu_common.c
+	${CC} ${CFLAGS} -c $^
+
+admin_menu.o: admin_menu.c
+	${CC} ${CFLAGS} -c $^
+
+client_menu.o: client_menu.c
 	${CC} ${CFLAGS} -c $^
 
 item.o: item.c

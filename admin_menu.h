@@ -1,5 +1,5 @@
-#ifndef MENU_H
-#define MENU_H
+#ifndef ADMIN_MENU_H
+#define ADMIN_MENU_H
 
 extern void menu_items_add();
 extern void menu_items_modify();

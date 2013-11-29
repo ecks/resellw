@@ -5,13 +5,14 @@
 #include "io.h"
 #include "util.h"
 #include "list.h"
-#include "menu.h"
 #include "room.h"
 #include "item.h"
-
+#include "menu_common.h"
+#include "admin_menu.h"
+#
 // items start
 
-void menu_items_add()
+void admin_menu_items_add()
 {
   char * upc;
   char * desc;
@@ -90,20 +91,21 @@ void menu_items_add()
 
 }
 
-void menu_items_modify()
+void admin_menu_items_modify()
 {
   struct items * items;
+  struct item * item;
   char * show_info;
 
   printf("Do you want to show detailed information about each item? (y/n) ");
   show_info = getline();
   if(strcmp(show_info, "y") == 0)
   {
-    items = items_get_all_detailed();
+    menu_display_items_electronics(items_get_all_detailed());
   }
   else if(strcmp(show_info, "n") == 0)
   {
-    items = items_get_all();
+    menu_display_items(items_get_all());
   }
   else
   {
@@ -111,7 +113,7 @@ void menu_items_modify()
   }
 }
 
-void menu_items_delete()
+void admin_menu_items_delete()
 {
 
 }
@@ -120,7 +122,7 @@ void menu_items_delete()
 
 // rooms start
 
-void menu_rooms_add()
+void admin_menu_rooms_add()
 { 
   char * room_desc = NULL;
   printf("Room Description: ");
@@ -129,7 +131,7 @@ void menu_rooms_add()
   room_add(room_desc);
 }
 
-void menu_rooms_modify()
+void admin_menu_rooms_modify()
 {
 /*  struct rooms * rooms = rooms_get_all();
   int i = 1;
@@ -141,7 +143,7 @@ void menu_rooms_modify()
   printf("Please select the Room you want to modify\n"); */
 }
 
-void menu_rooms_delete()
+void admin_menu_rooms_delete()
 {
   struct rooms * rooms = rooms_get_all();
   int i = 1;
@@ -150,7 +152,7 @@ void menu_rooms_delete()
 
   LIST_FOR_EACH(room, struct room, node, &rooms->room_list)
   {
-    printf("%d) Room %s", i, room->desc);
+    printf("%d) Room %s\n", i, room->desc);
     i++;
   }
   printf("%d) All Rooms\n", i);
@@ -183,17 +185,17 @@ void menu_rooms_delete()
 
 // prices start
 
-void menu_prices_add()
+void admin_menu_prices_add()
 {
 
 }
 
-void menu_prices_modify()
+void admin_menu_prices_modify()
 {
 
 }
 
-void menu_prices_delete()
+void admin_menu_prices_delete()
 {
 
 }
@@ -202,17 +204,17 @@ void menu_prices_delete()
 
 // storings start
 
-void menu_storings_add()
+void admin_menu_storings_add()
 {
 
 }
 
-void menu_storings_modify()
+void admin_menu_storings_modify()
 {
 
 }
 
-void menu_storings_delete()
+void admin_menu_storings_delete()
 {
 
 }
@@ -222,17 +224,17 @@ void menu_storings_delete()
 
 // listings start
 
-void menu_listings_add()
+void admin_menu_listings_add()
 {
 
 }
 
-void menu_listings_modify()
+void admin_menu_listings_modify()
 {
 
 }
 
-void menu_listings_delete()
+void admin_menu_listings_delete()
 {
 
 }
@@ -241,7 +243,7 @@ void menu_listings_delete()
 
 // top level start
 
-void menu_add()
+void admin_menu_add()
 {
   unsigned int choice;
 
@@ -258,27 +260,27 @@ void menu_add()
     {
         case 1:
           printf("Asked to add an Item\n");
-          menu_items_add();
+          admin_menu_items_add();
           break;
 
         case 2:
           printf("Asked to add a Room\n");
-          menu_rooms_add();
+          admin_menu_rooms_add();
           break;
 
         case 3:
           printf("Asked to add a Price\n");
-          menu_prices_add();
+          admin_menu_prices_add();
           break;
 
         case 4:
           printf("Asked to store an Item to a Room\n");
-          menu_storings_add();
+          admin_menu_storings_add();
           break;
       
         case 5:
           printf("Asked to list an Item with a Price\n");
-          menu_listings_add();
+          admin_menu_listings_add();
           break;
 
         default:
@@ -288,7 +290,7 @@ void menu_add()
   }
 }
 
-void menu_modify()
+void admin_menu_modify()
 {
   unsigned int choice;;
 
@@ -305,27 +307,27 @@ void menu_modify()
     {
         case 1:
           printf("Asked to modify an Item\n");
-          menu_items_modify();
+          admin_menu_items_modify();
           break;
 
         case 2:
           printf("Asked to modify a Room\n");
-          menu_rooms_modify();
+          admin_menu_rooms_modify();
           break;
 
         case 3:
           printf("Asked to modify a Price\n");
-          menu_prices_modify();
+          admin_menu_prices_modify();
           break;
 
         case 4:
           printf("Asked to move an Item to another Price\n");
-          menu_storings_modify();
+          admin_menu_storings_modify();
           break;
 
         case 5:
           printf("Asked to relist an Item with another Price\n");
-          menu_listings_modify();
+          admin_menu_listings_modify();
           break;
       
         default:
@@ -335,7 +337,7 @@ void menu_modify()
   }
 }
 
-void menu_delete()
+void admin_menu_delete()
 {
   unsigned int choice;;
 
@@ -352,28 +354,28 @@ void menu_delete()
     {
         case 1:
           printf("Asked to delete an Item\n");
-          menu_items_delete();
+          admin_menu_items_delete();
           break;
 
         case 2:
           printf("Asked to delete a Room\n");
-          menu_rooms_delete();
+          admin_menu_rooms_delete();
           break;
 
         case 3:
           printf("Asked to delete a Price\n");
-          menu_prices_delete();
+          admin_menu_prices_delete();
           break;
 
 
         case 4:
           printf("Asked to remove an Item from a Room\n");
-          menu_rooms_delete();
+          admin_menu_rooms_delete();
           break;
 
         case 5:
           printf("Asked to take down an Item with a Price\n");
-          menu_listings_delete();
+          admin_menu_listings_delete();
           break;
       
         default:
@@ -385,7 +387,7 @@ void menu_delete()
 
 // top level end
 
-void menu()
+void admin_menu()
 {
   char * line = NULL;
   size_t size;
@@ -409,18 +411,18 @@ void menu()
       {
         case 1:
           printf("Asked to add\n");
-          menu_add();
+          admin_menu_add();
           break;
 
         case 2:
           printf("Asked to modify\n");
-          menu_modify();
+          admin_menu_modify();
           break;
 
 
         case 3:
           printf("Asked to delete\n");
-          menu_delete();
+          admin_menu_delete();
           break;
       
         case 4:

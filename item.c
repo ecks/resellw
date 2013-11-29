@@ -9,7 +9,6 @@
 #include "item.h"
 
 static struct items * get(char * buffer);
-static struct item * item_get_iid(char * iid);
 
 int item_add(char * upc, char * description, char * quantity, char * purchase_price, char * detail)
 {
@@ -144,7 +143,7 @@ struct items * get(char * buffer)
 }
 
 // if item is NULL, we need to retrieve the item based on iid 
-struct items * elec_get(char * buffer, struct item * par_item)
+struct items * elec_get(char * buffer)
 {
   MYSQL_RES * res;
   MYSQL_ROW row;
@@ -159,27 +158,45 @@ struct items * elec_get(char * buffer, struct item * par_item)
   while (row = mysql_fetch_row(res)) 
   {
     char * iid = row[0];
-    char * serial_number = row[1];
-    char * electronic_type = row[2];
-    char * model = row[3];
+    char * upc = row[1];
+    char * desc = row[2];
+    char * quantity = row[3];
+    char * purchase_price = row[4];
+    char * detail = row[5];
 
-    if(par_item == NULL)
-      item = item_get_iid(iid);
-    else
-      item = par_item;
+    char * serial_number = row[6];
+    char * electronic_type = row[7];
+    char * model = row[8];
 
     elec = calloc(1, sizeof(struct electronics));
-    memcpy(&elec->item, item, sizeof(struct item));
+
     list_init(&elec->item.node);
-    free(item);  // item is no longer needed
  
+    elec->item.iid = calloc(strlen(iid) + 1, sizeof(char));
+    elec->item.upc = calloc(strlen(upc) + 1, sizeof(char));
+    elec->item.desc = calloc(strlen(desc) + 1, sizeof(char));
+    elec->item.quantity = calloc(strlen(quantity) + 1, sizeof(char));
+    elec->item.purchase_price = calloc(strlen(purchase_price) + 1, sizeof(char));
+
     elec->serial_number = calloc(strlen(serial_number) + 1, sizeof(char));
     elec->electronic_type = calloc(strlen(electronic_type) + 1, sizeof(char));
     elec->model = calloc(strlen(model) + 1, sizeof(char));
   
+    strncpy(elec->item.iid, iid, strlen(iid));
+    strncpy(elec->item.upc, upc, strlen(upc));
+    strncpy(elec->item.desc, desc, strlen(desc));
+    strncpy(elec->item.quantity, quantity, strlen(quantity));
+    strncpy(elec->item.purchase_price, purchase_price, strlen(purchase_price));
+
     strncpy(elec->serial_number, serial_number, strlen(serial_number));
     strncpy(elec->electronic_type, electronic_type, strlen(model));
     strncpy(elec->model, model, strlen(model));
+
+    elec->item.iid[strlen(iid)] = '\0';
+    elec->item.upc[strlen(upc)] = '\0';
+    elec->item.desc[strlen(desc)] = '\0';
+    elec->item.quantity[strlen(quantity)] = '\0';
+    elec->item.purchase_price[strlen(purchase_price)] = '\0';
 
     elec->serial_number[strlen(serial_number)] = '\0';
     elec->electronic_type[strlen(electronic_type)] = '\0';
@@ -206,27 +223,18 @@ struct items * items_get_all_detailed()
 
 struct items * items_get(char * upc, char * description, char * quantity, char *  purchase_price)
 {
-  char buffer[300];
+  char buffer[200];
   sprintf(buffer, "SELECT * FROM Item where upc = '%s' and description = '%s' and quantity = %s and purchase_price = %s", upc, description, quantity, purchase_price);
 
   return get(buffer);
 }
 
-// use this only if you are sure there is one item in the list
-struct item * item_get_iid(char * iid)
+struct items * items_get_upc(char * upc)
 {
-  struct items * items;
-  struct item * item;
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item where iid = '%s'", iid);
+  sprintf(buffer, "SELECT * FROM Item where upc = '%s'", upc);
 
-  items = get(buffer);
-
-  assert(list_size(I_LIST(items)) == 1);
-  item = I_CONT(list_pop_front(&items->item_list));
-  free(items);
-
-  return item;
+  return get(buffer);
 }
 
 // use this only if you are sure there is one item in the list
@@ -244,17 +252,30 @@ struct item * item_get(char * upc, char * description, char * quantity, char * p
   return item;
 }
 
+struct items * items_electronics_get(char * upc, char * description, char * quantity, char * purchase_price)
+{
+  char buffer[200];
+  sprintf(buffer, "SELECT * FROM Item natural join Electronics where upc = '%s' and description = '%s' and quantity = %s and purchase_price = %s", 
+                  upc, description, quantity, purchase_price);
+  return elec_get(buffer);
+}
+
+struct items * items_electronics_get_model(char * model)
+{
+  char buffer[200];
+  sprintf(buffer, "SELECT * FROM Item natural join Electronics where model = '%s'", 
+                  model);
+  return elec_get(buffer);
+}
+
 struct electronics * item_electronics_get(char * upc, char * description, char * quantity, char * purchase_price)
 {
   struct items * items;
-  struct item * item;
   struct electronics * elec;
-  char buffer[200];
 
-  item = item_get(upc, description, quantity, purchase_price);
-  sprintf(buffer, "SELECT * FROM Electronics where iid = '%s'", item->iid);
+  items = items_electronics_get(upc, description, quantity, purchase_price);
 
-  items = elec_get(buffer, item);
+  assert(list_size(I_LIST(items)) == 1);
   elec = E_CONT(list_pop_front(&items->item_list));
   free(items);
 
