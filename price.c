@@ -5,6 +5,7 @@
 #include "db.h"
 #include "util.h"
 #include "list.h"
+#include "room.h"
 #include "item.h"
 #include "price.h"
 
