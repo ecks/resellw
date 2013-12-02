@@ -10,7 +10,8 @@
 int storing_add(char * iid, char * room_id)
 {
   char buffer[200];
-  sprintf(buffer, "INSERT INTO Store (iid, room_id) VALUES ('%s')", iid, room_id);
+  sprintf(buffer, "INSERT INTO Store (iid, room_id) VALUES (%s, %s)", iid, room_id);
+  db_query(buffer); 
   return 0;
 }
 

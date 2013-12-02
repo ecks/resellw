@@ -16,3 +16,9 @@ create table Clothing (iid INTEGER PRIMARY KEY, clothing_brand VARCHAR(30), size
 
 BathBody table:
 create table BathBody (iid INTEGER PRIMARY KEY, bathbody_brand VARCHAR(30), feature VARCHAR(30), FOREIGN KEY (iid) REFERENCES Item ON DELETE CASCADE);
+
+Price table:
+create table Price (price_id INTEGER NOT NULL AUTO_INCREMENT, type_of_price ENUM('bid', 'buy now'), sell_price NUMERIC(4,2), PRIMARY KEY(price_id));
+
+List table:
+create table List (iid INTEGER, price_id INTEGER, PRIMARY KEY (price_id), FOREIGN KEY (iid) REFERENCES Item ON DELETE CASCADE, FOREIGN KEY (price_id) REFERENCES Price ON DELETE CASCADE);

@@ -4,7 +4,9 @@
 #include "util.h"
 #include "io.h"
 #include "list.h"
+#include "room.h"
 #include "item.h"
+#include "price.h"
 #include "menu_common.h"
 #include "client_menu.h"
 
@@ -37,10 +39,10 @@ void client_menu_search_detailed()
   struct electronics * electronics;
   unsigned int detail_type;
 
-  printf("Choose for the type of details you want to search by:\n");
   printf("1) Electronics model\n");
   printf("2) Clothing brand\n");
   printf("3) Bath and Body brand\n");
+  printf("Choose for the type of details you want to search by:\n");
   detail_type = getchoice();
 
   switch(detail_type)
@@ -48,8 +50,8 @@ void client_menu_search_detailed()
     case 1:
       printf("Please enter Electronics model: ");
       elec_model = getline();
-      items = items_electronics_get_model(elec_model);
-      menu_display_items_electronics(items);
+      items = items_electronics_rooms_get_model(elec_model);
+      menu_display_items_rooms_detailed(items);
       break;
 
     case 2:
@@ -70,7 +72,46 @@ void client_menu_search_detailed()
 
 void client_menu_search_price()
 {
+  struct prices * prices;
+  struct listed_price * l_price;
+  char * low_price;
+  char * high_price;
+  unsigned int type_of_price;
 
+  printf("Please enter lowest price range: ");
+  low_price = getline();
+  printf("Please enter highest price range: ");
+  high_price = getline();
+
+  printf("1) Don't care\n");
+  printf("2) Bid\n");
+  printf("3) Buy Now\n");
+  printf("Please select the type of price you want to search by: \n");
+  type_of_price = getchoice();
+
+  switch(type_of_price)
+  {
+    case 1:
+      prices = prices_get_range_sell_price(low_price, high_price);
+      break;
+
+    case 2:
+      prices = prices_get_range_sell_price_bid(low_price, high_price);
+      break;
+
+    case 3:
+      prices = prices_get_range_sell_price_buy_now(low_price, high_price);
+      break;
+
+    default:
+      printf("Unknown choice");
+      return;
+  }
+  LIST_FOR_EACH(l_price, struct listed_price, item.node, &prices->price_list)
+  {
+    printf("Item UPC: %s, Description: %s, Quantity: %s, Purchase Price: %s, Type of Sell: %s, Sell Price: %s\n", 
+           l_price->item.upc, l_price->item.desc, l_price->item.quantity, l_price->item.purchase_price, l_price->type_of_price, l_price->sell_price);
+  }
 }
 
 void client_menu()

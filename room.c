@@ -40,6 +40,7 @@ struct rooms * get(char * buffer)
 
     room = calloc(1, sizeof(struct room));
     list_init(&room->node);
+
     room->room_id = calloc(strlen(room_id) + 1, sizeof(char)); // 1 extra for null terminating output
     room->desc = calloc(strlen(desc) + 1, sizeof(char)); // 1 extra for null terminating output
 
