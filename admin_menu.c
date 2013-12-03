@@ -8,6 +8,8 @@
 #include "room.h"
 #include "item.h"
 #include "price.h"
+#include "store.h"
+#include "listing.h"
 #include "menu_common.h"
 #include "admin_menu.h"
 
@@ -279,7 +281,8 @@ void admin_menu_items_modify()
   else if(strcmp(show_info, "n") == 0)
   {
     items = items_get_all();
-    menu_display_items(items);
+    int i = 1;
+    menu_display_items(items, &i);
   }
   else
   {
@@ -328,7 +331,41 @@ void admin_menu_items_modify()
 
 void admin_menu_items_delete()
 {
+  struct items * items;
+  struct item * item;
+  int i = 1;
+  unsigned int choice;
 
+  items = items_get_all();
+  menu_display_items(items, &i);
+
+  printf("%d) All Items\n", i);
+  printf("Please select the Item you want to delete: ");
+  if((choice = getchoice()) == 0)
+  {
+    printf("No line\n");
+    return;
+  }
+  else
+  {
+    if(choice == i)
+    {
+      items_delete(items);
+    }
+    else
+    {
+      int j = 1;
+      LIST_FOR_EACH(item, struct item, node, &items->item_list)
+      {
+        if(choice == j)
+        {
+          item_delete(item);
+          break;
+        } 
+        j++;
+      }
+    }
+  }
 }
 
 // items end
@@ -359,7 +396,7 @@ void admin_menu_rooms_delete()
 {
   struct rooms * rooms = rooms_get_all();
   int i = 1;
-  struct room * room;
+  struct roomer * roomer;
   unsigned int choice;
 
   menu_display_rooms(rooms, &i);
@@ -380,11 +417,11 @@ void admin_menu_rooms_delete()
     else
     {
       int j = 1;
-      LIST_FOR_EACH(room, struct room, node, &rooms->room_list)
+      R_EACH(roomer, rooms)
       {
         if(choice == j)
         {
-          room_delete(room);
+          room_delete(roomer);
           break;
         } 
         j++;
@@ -439,7 +476,42 @@ void admin_menu_prices_modify()
 
 void admin_menu_prices_delete()
 {
+  struct prices * prices;
+  struct price * price;
+  unsigned int choice;
 
+  int i = 1;
+
+  prices = prices_get_all();
+  menu_display_prices(prices, &i);
+
+  printf("%d) All Prices\n", i);
+  printf("Please select the Price you want to delete: ");
+  if((choice = getchoice()) == 0)
+  {
+    printf("No line\n");
+    return;
+  }
+  else
+  {
+    if(choice == i)
+    {
+      prices_delete(prices);
+    }
+    else
+    {
+      int j = 1;
+      LIST_FOR_EACH(price, struct price, node, &prices->price_list)
+      {
+        if(choice == j)
+        {
+          price_delete(price);
+          break;
+        } 
+        j++;
+      }
+    }
+  }
 }
 // prices end
 
@@ -451,12 +523,12 @@ void admin_menu_storings_add()
   struct items * items;
   struct item * item;
   struct rooms * rooms;
-  struct room * room;
+  struct roomer * roomer;
 
   unsigned int item_choice;
   unsigned int room_choice;
 
-  int i;
+  int i = 1;
   int j = 1;
 
   items = items_get_all();
@@ -467,13 +539,13 @@ void admin_menu_storings_add()
   }
 
   rooms = rooms_get_all();
-  if(list_empty(&rooms->room_list))
+  if(list_empty(R_LIST(rooms)))
   {
     printf("No Rooms found, please add a Room so you can store Items in it\n");
     return;
   }
 
-  menu_display_items(items);
+  menu_display_items(items, &i);
   printf("Please select item: ");
   if((item_choice = getchoice()) == 0)
   {
@@ -495,11 +567,11 @@ void admin_menu_storings_add()
     if(item_choice == i)
     {
       j = 1;
-      LIST_FOR_EACH(room, struct room, node, &rooms->room_list)
+      R_EACH(roomer, rooms)
       {
         if(room_choice == j)
         {
-          storing_add(item->iid, room->room_id);
+          storing_add(item->iid, roomer->room.room_id);
         }
         j++;
       }
@@ -515,7 +587,41 @@ void admin_menu_storings_modify()
 
 void admin_menu_storings_delete()
 {
+  struct storings * storings;
+  struct storing * storing;
+  unsigned int choice;
+  int i = 1;
 
+  storings = storings_get_all();
+
+  menu_display_storings(storings, &i);
+  printf("%d) All Storings\n", i);
+  printf("Please select the Storing you want to delete: ");
+  if((choice = getchoice()) == 0)
+  {
+    printf("No line\n");
+    return;
+  }
+  else
+  {
+    if(choice == i)
+    {
+      storings_delete(storings);
+    }
+    else
+    {
+      int j = 1;
+      LIST_FOR_EACH(storing, struct storing, node, &storings->storing_list)
+      {
+        if(choice == j)
+        {
+          storing_delete(storing);
+          break;
+        } 
+        j++;
+      }
+    }
+  }
 }
 
 // storings end
@@ -533,7 +639,7 @@ void admin_menu_listings_add()
   unsigned int item_choice;
   unsigned int price_choice;
 
-  int i;
+  int i = 1;
   int j = 1;
 
   items = items_get_all();
@@ -550,7 +656,7 @@ void admin_menu_listings_add()
     return;
   }
 
-  menu_display_items(items);
+  menu_display_items(items, &i);
   printf("Please select Item: ");
 
   if((item_choice = getchoice()) == 0)
@@ -593,7 +699,41 @@ void admin_menu_listings_modify()
 
 void admin_menu_listings_delete()
 {
+  struct listings * listings;
+  struct listing * listing;
+  unsigned int choice;
+  int i = 1;
 
+  listings = listings_get_all();
+
+  menu_display_listings(listings, &i);
+  printf("%d) All Listings\n", i);
+  printf("Please select the Listing you want to delete: ");
+  if((choice = getchoice()) == 0)
+  {
+    printf("No line\n");
+    return;
+  }
+  else
+  {
+    if(choice == i)
+    {
+      listings_delete(listings);
+    }
+    else
+    {
+      int j = 1;
+      LIST_FOR_EACH(listing, struct listing, node, &listings->listing_list)
+      {
+        if(choice == j)
+        {
+          listing_delete(listing);
+          break;
+        } 
+        j++;
+      }
+    }
+  }
 }
 
 // listings end
@@ -727,7 +867,7 @@ void admin_menu_delete()
 
         case 4:
           printf("Asked to remove an Item from a Room\n");
-          admin_menu_rooms_delete();
+          admin_menu_storings_delete();
           break;
 
         case 5:

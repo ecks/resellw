@@ -62,7 +62,7 @@ int listing_delete(struct listing * listing)
 {
   char buffer[200];
 
-  sprintf(buffer, "DELETE FROM List where iid = '%s'", listing->price_id);
+  sprintf(buffer, "DELETE FROM List where price_id = '%s'", listing->price_id);
   db_query(buffer); 
   return 0;
 }

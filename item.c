@@ -201,9 +201,9 @@ struct items * elec_get(char * buffer, struct items * items_par)
     elec->item.purchase_price = calloc(strlen(purchase_price) + 1, sizeof(char));
     elec->item.detail = calloc(strlen(detail) + 1, sizeof(char));
 
-    elec->serial_number = calloc(strlen(serial_number) + 1, sizeof(char));
-    elec->electronic_type = calloc(strlen(electronic_type) + 1, sizeof(char));
-    elec->model = calloc(strlen(model) + 1, sizeof(char));
+    elec->elec.serial_number = calloc(strlen(serial_number) + 1, sizeof(char));
+    elec->elec.electronic_type = calloc(strlen(electronic_type) + 1, sizeof(char));
+    elec->elec.model = calloc(strlen(model) + 1, sizeof(char));
   
     strncpy(elec->item.iid, iid, strlen(iid));
     strncpy(elec->item.upc, upc, strlen(upc));
@@ -212,9 +212,9 @@ struct items * elec_get(char * buffer, struct items * items_par)
     strncpy(elec->item.purchase_price, purchase_price, strlen(purchase_price));
     strncpy(elec->item.detail, detail, strlen(detail));
 
-    strncpy(elec->serial_number, serial_number, strlen(serial_number));
-    strncpy(elec->electronic_type, electronic_type, strlen(model));
-    strncpy(elec->model, model, strlen(model));
+    strncpy(elec->elec.serial_number, serial_number, strlen(serial_number));
+    strncpy(elec->elec.electronic_type, electronic_type, strlen(model));
+    strncpy(elec->elec.model, model, strlen(model));
 
     elec->item.iid[strlen(iid)] = '\0';
     elec->item.upc[strlen(upc)] = '\0';
@@ -223,101 +223,11 @@ struct items * elec_get(char * buffer, struct items * items_par)
     elec->item.purchase_price[strlen(purchase_price)] = '\0';
     elec->item.detail[strlen(detail)] = '\0';
 
-    elec->serial_number[strlen(serial_number)] = '\0';
-    elec->electronic_type[strlen(electronic_type)] = '\0';
-    elec->model[strlen(model)] = '\0';
+    elec->elec.serial_number[strlen(serial_number)] = '\0';
+    elec->elec.electronic_type[strlen(electronic_type)] = '\0';
+    elec->elec.model[strlen(model)] = '\0';
   
     list_push_back(&items->item_list, &elec->item.node);
-  }
-
-  return items;
-}
-
-struct items * elec_room_get(char * buffer, struct items * items_par)
-{
-  MYSQL_RES * res;
-  MYSQL_ROW row;
-  struct items * items;
-  struct electronics_room * elec_room;
-
-  if(items_par == NULL)
-  {
-    items = calloc(1, sizeof(struct items));
-    list_init(&items->item_list);
-  }
-  else
-  {
-    items = items_par;
-  }
-
-  res = db_query_res(buffer); 
-  while (row = mysql_fetch_row(res)) 
-  {
-    char * room_id = row[0];
-
-    char * iid = row[1];
-    char * upc = row[2];
-    char * desc = row[3];
-    char * quantity = row[4];
-    char * purchase_price = row[5];
-    char * detail = row[6];
-
-    char * serial_number = row[7];
-    char * electronic_type = row[8];
-    char * model = row[9];
- 
-    char * room_desc = row[10];
-
-    elec_room = calloc(1, sizeof(struct electronics_room));
-
-    list_init(&elec_room->item.node);
- 
-    elec_room->room_m.room_id = calloc(strlen(room_id) + 1, sizeof(char));
-
-    elec_room->item.iid = calloc(strlen(iid) + 1, sizeof(char));
-    elec_room->item.upc = calloc(strlen(upc) + 1, sizeof(char));
-    elec_room->item.desc = calloc(strlen(desc) + 1, sizeof(char));
-    elec_room->item.quantity = calloc(strlen(quantity) + 1, sizeof(char));
-    elec_room->item.purchase_price = calloc(strlen(purchase_price) + 1, sizeof(char));
-    elec_room->item.detail = calloc(strlen(detail) + 1, sizeof(char));
-
-    elec_room->elec.serial_number = calloc(strlen(serial_number) + 1, sizeof(char));
-    elec_room->elec.electronic_type = calloc(strlen(electronic_type) + 1, sizeof(char));
-    elec_room->elec.model = calloc(strlen(model) + 1, sizeof(char));
-
-    elec_room->room_m.desc = calloc(strlen(room_desc) + 1, sizeof(char));
-  
-    strncpy(elec_room->room_m.room_id, room_id, strlen(room_id));
-
-    strncpy(elec_room->item.iid, iid, strlen(iid));
-    strncpy(elec_room->item.upc, upc, strlen(upc));
-    strncpy(elec_room->item.desc, desc, strlen(desc));
-    strncpy(elec_room->item.quantity, quantity, strlen(quantity));
-    strncpy(elec_room->item.purchase_price, purchase_price, strlen(purchase_price));
-    strncpy(elec_room->item.detail, detail, strlen(detail));
-
-    strncpy(elec_room->elec.serial_number, serial_number, strlen(serial_number));
-    strncpy(elec_room->elec.electronic_type, electronic_type, strlen(model));
-    strncpy(elec_room->elec.model, model, strlen(model));
-    
-    strncpy(elec_room->room_m.desc, room_desc, strlen(room_desc));
-
-    elec_room->room_m.room_id[strlen(room_id)] = '\0';
-
-    elec_room->item.iid[strlen(iid)] = '\0';
-    elec_room->item.upc[strlen(upc)] = '\0';
-    elec_room->item.desc[strlen(desc)] = '\0';
-    elec_room->item.quantity[strlen(quantity)] = '\0';
-    elec_room->item.purchase_price[strlen(purchase_price)] = '\0';
-    elec_room->item.detail[strlen(detail)] = '\0';
-
-    elec_room->elec.serial_number[strlen(serial_number)] = '\0';
-    elec_room->elec.electronic_type[strlen(electronic_type)] = '\0';
-    elec_room->elec.model[strlen(model)] = '\0';
-    
-    elec_room->room_m.desc[strlen(desc)] = '\0';
-  
-    list_push_back(&items->item_list, &elec_room->item.node);
   }
 
   return items;
@@ -375,6 +285,29 @@ struct item * item_get(char * upc, char * description, char * quantity, char * p
   return item;
 }
 
+struct items * items_get_iid(char * iid)
+{
+  char buffer[200];
+  sprintf(buffer, "SELECT * FROM Item where iid = '%s'", iid);
+
+  return get(buffer);
+}
+
+// use this only if you are sure there is one item in the list
+struct item * item_get_iid(char * iid)
+{
+  struct items * items;
+  struct item * item;
+
+  items = items_get_iid(iid);
+
+  assert(list_size(I_LIST(items)) == 1);
+  item = I_CONT(list_pop_front(&items->item_list));
+  free(items);
+
+  return item;
+}
+
 struct items * items_electronics_get_all(struct items * items)
 {
   char buffer[200];
@@ -389,14 +322,6 @@ struct items * items_electronics_get(char * upc, char * description, char * quan
   sprintf(buffer, "SELECT * FROM Item natural join Electronics where upc = '%s' and description = '%s' and quantity = %s and purchase_price = %s", 
                   upc, description, quantity, purchase_price);
   return elec_get(buffer, NULL);
-}
-
-struct items * items_electronics_rooms_get_model(char * model)
-{
-  char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item natural join Electronics natural join Store natural join Room where model = '%s'", 
-                  model);
-  return elec_room_get(buffer, NULL);
 }
 
 struct electronics * item_electronics_get(char * upc, char * description, char * quantity, char * purchase_price)
@@ -455,8 +380,8 @@ struct items * cloth_get(char * buffer, struct items * items_par)
     cloth->item.purchase_price = calloc(strlen(purchase_price) + 1, sizeof(char));
     cloth->item.detail = calloc(strlen(detail) + 1, sizeof(char));
 
-    cloth->clothing_brand = calloc(strlen(clothing_brand) + 1, sizeof(char));
-    cloth->size = calloc(strlen(size) + 1, sizeof(char));
+    cloth->cloth.clothing_brand = calloc(strlen(clothing_brand) + 1, sizeof(char));
+    cloth->cloth.size = calloc(strlen(size) + 1, sizeof(char));
   
     strncpy(cloth->item.iid, iid, strlen(iid));
     strncpy(cloth->item.upc, upc, strlen(upc));
@@ -465,8 +390,8 @@ struct items * cloth_get(char * buffer, struct items * items_par)
     strncpy(cloth->item.purchase_price, purchase_price, strlen(purchase_price));
     strncpy(cloth->item.detail, detail, strlen(detail));
 
-    strncpy(cloth->clothing_brand, clothing_brand, strlen(clothing_brand));
-    strncpy(cloth->size, size, strlen(size));
+    strncpy(cloth->cloth.clothing_brand, clothing_brand, strlen(clothing_brand));
+    strncpy(cloth->cloth.size, size, strlen(size));
 
     cloth->item.iid[strlen(iid)] = '\0';
     cloth->item.upc[strlen(upc)] = '\0';
@@ -475,8 +400,8 @@ struct items * cloth_get(char * buffer, struct items * items_par)
     cloth->item.purchase_price[strlen(purchase_price)] = '\0';
     cloth->item.detail[strlen(detail)] = '\0';
 
-    cloth->clothing_brand[strlen(clothing_brand)] = '\0';
-    cloth->size[strlen(size)] = '\0';
+    cloth->cloth.clothing_brand[strlen(clothing_brand)] = '\0';
+    cloth->cloth.size[strlen(size)] = '\0';
   
     list_push_back(&items->item_list, &cloth->item.node);
   }
@@ -556,8 +481,8 @@ struct items * bathbody_get(char * buffer, struct items * items_par)
     bb->item.purchase_price = calloc(strlen(purchase_price) + 1, sizeof(char));
     bb->item.detail = calloc(strlen(detail) + 1, sizeof(char));
 
-    bb->bathbody_brand = calloc(strlen(bathbody_brand) + 1, sizeof(char));
-    bb->feature = calloc(strlen(feature) + 1, sizeof(char));
+    bb->bb.bathbody_brand = calloc(strlen(bathbody_brand) + 1, sizeof(char));
+    bb->bb.feature = calloc(strlen(feature) + 1, sizeof(char));
   
     strncpy(bb->item.iid, iid, strlen(iid));
     strncpy(bb->item.upc, upc, strlen(upc));
@@ -566,8 +491,8 @@ struct items * bathbody_get(char * buffer, struct items * items_par)
     strncpy(bb->item.purchase_price, purchase_price, strlen(purchase_price));
     strncpy(bb->item.detail, detail, strlen(detail));
 
-    strncpy(bb->bathbody_brand, bathbody_brand, strlen(bathbody_brand));
-    strncpy(bb->feature, feature, strlen(feature));
+    strncpy(bb->bb.bathbody_brand, bathbody_brand, strlen(bathbody_brand));
+    strncpy(bb->bb.feature, feature, strlen(feature));
 
     bb->item.iid[strlen(iid)] = '\0';
     bb->item.upc[strlen(upc)] = '\0';
@@ -576,8 +501,8 @@ struct items * bathbody_get(char * buffer, struct items * items_par)
     bb->item.purchase_price[strlen(purchase_price)] = '\0';
     bb->item.detail[strlen(detail)] = '\0';
 
-    bb->bathbody_brand[strlen(bathbody_brand)] = '\0';
-    bb->feature[strlen(feature)] = '\0';
+    bb->bb.bathbody_brand[strlen(bathbody_brand)] = '\0';
+    bb->bb.feature[strlen(feature)] = '\0';
   
     list_push_back(&items->item_list, &bb->item.node);
   }

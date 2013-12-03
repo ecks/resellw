@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stddef.h>
+#include <assert.h>
 #include <mysql.h>
 
 #include "db.h"
@@ -23,11 +24,11 @@ struct rooms * get(char * buffer)
   MYSQL_RES * res;
   MYSQL_ROW row;
   struct rooms * rooms;
-  struct room * room;
+  struct roomer * roomer;
 
 
   rooms = calloc(1, sizeof(struct rooms));
-  list_init(&rooms->room_list);
+  list_init(R_LIST(rooms));
 
   res = db_query_res(buffer); 
   while (row = mysql_fetch_row(res)) 
@@ -38,19 +39,19 @@ struct rooms * get(char * buffer)
     printf("Id: %s\n",room_id);
     printf("Room desc: %s\n",desc);
 
-    room = calloc(1, sizeof(struct room));
-    list_init(&room->node);
+    roomer = calloc(1, sizeof(struct roomer));
+    list_init(NODE(roomer));
 
-    room->room_id = calloc(strlen(room_id) + 1, sizeof(char)); // 1 extra for null terminating output
-    room->desc = calloc(strlen(desc) + 1, sizeof(char)); // 1 extra for null terminating output
+    roomer->room.room_id = calloc(strlen(room_id) + 1, sizeof(char)); // 1 extra for null terminating output
+    roomer->room.desc = calloc(strlen(desc) + 1, sizeof(char)); // 1 extra for null terminating output
 
-    strncpy(room->room_id, room_id, strlen(room_id));
-    strncpy(room->desc, desc, strlen(desc));
+    strncpy(roomer->room.room_id, room_id, strlen(room_id));
+    strncpy(roomer->room.desc, desc, strlen(desc));
 
-    room->room_id[strlen(room_id)] = '\0';
-    room->desc[strlen(desc)] = '\0';
+    roomer->room.room_id[strlen(room_id)] = '\0';
+    roomer->room.desc[strlen(desc)] = '\0';
 
-    list_push_back(&rooms->room_list, &room->node);    
+    list_push_back(R_LIST(rooms), NODE(roomer));    
   }
 
   mysql_free_result(res);
@@ -71,11 +72,32 @@ struct rooms * rooms_get(char * room_desc)
   return get(buffer);
 }
 
-int room_delete(struct room * room)
+struct rooms * rooms_get_room_id(char * room_id)
+{
+  char buffer[200];
+  sprintf(buffer, "SELECT * FROM Room where room_id = '%s'", room_id);
+  return get(buffer);
+}
+
+struct roomer * room_get_room_id(char * room_id)
+{  
+  struct rooms * rooms;
+  struct roomer * roomer;
+
+  rooms = rooms_get_room_id(room_id);
+
+  assert(list_size(R_LIST(rooms)) == 1);
+  roomer = R_CONT(list_pop_front(R_LIST(rooms)));
+  free(rooms);
+
+  return roomer;
+}
+
+int room_delete(struct roomer * roomer)
 {
   char buffer[200];
 
-  sprintf(buffer, "DELETE FROM Room where room_id = '%s'", room->room_id);
+  sprintf(buffer, "DELETE FROM Room where room_id = '%s'", roomer->room.room_id);
   db_query(buffer); 
   return 0;
 }
@@ -83,10 +105,10 @@ int room_delete(struct room * room)
 
 int rooms_delete(struct rooms * rooms)
 {
-  struct room * room;
-  LIST_FOR_EACH(room, struct room, node, &rooms->room_list)
+  struct roomer * roomer;
+  R_EACH(roomer, rooms)
   {
-    room_delete(room);
+    room_delete(roomer);
   }
 
   return 0;

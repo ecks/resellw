@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <stdbool.h>
+#include <assert.h>
 #include <mysql.h>
 
 #include "db.h"
@@ -145,6 +146,29 @@ struct prices * prices_get_all()
   sprintf(buffer, "SELECT * FROM Price");
   return get(buffer);
 }
+
+struct prices * prices_get_price_id(char * price_id)
+{
+  char buffer[200];
+  sprintf(buffer, "SELECT * FROM Price where price_id = '%s'", price_id);
+  return get(buffer);
+}
+
+struct price * price_get_price_id(char * price_id)
+{  
+  struct prices * prices;
+  struct price * price;
+
+  prices = prices_get_price_id(price_id);
+
+  assert(list_size(P_LIST(prices)) == 1);
+  price = P_CONT(list_pop_front(&prices->price_list));
+  free(prices);
+
+  return price;
+}
+
+
 
 struct prices * prices_get_range_sell_price(char * low_price, char * high_price)
 {

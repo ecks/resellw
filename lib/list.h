@@ -36,4 +36,6 @@ bool list_empty(const struct list *);
                    ITER = NEXT)
 
 
+#define NODE(ptr) (&ptr->node)
+
 #endif

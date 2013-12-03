@@ -7,6 +7,8 @@
 #include "room.h"
 #include "item.h"
 #include "price.h"
+#include "store.h"
+#include "listing.h"
 #include "menu_common.h"
 #include "client_menu.h"
 
@@ -26,7 +28,8 @@ void client_menu_search_upc()
   }
   else
   {
-    menu_display_items(items);
+    int i = 1;
+    menu_display_items(items, &i);
   }
 }
 
@@ -50,7 +53,7 @@ void client_menu_search_detailed()
     case 1:
       printf("Please enter Electronics model: ");
       elec_model = getline();
-      items = items_electronics_rooms_get_model(elec_model);
+      items = get_model_storings(elec_model);
       menu_display_items_rooms_detailed(items);
       break;
 

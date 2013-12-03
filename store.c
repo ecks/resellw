@@ -5,6 +5,8 @@
 #include "db.h"
 #include "util.h"
 #include "list.h"
+#include "item.h"
+#include "room.h"
 #include "store.h"
 
 int storing_add(char * iid, char * room_id)
@@ -49,6 +51,88 @@ struct storings * get(char * buffer)
   return storings;
 }
 
+struct items * elec_store_room_get(char * buffer)
+{
+  MYSQL_RES * res;
+  MYSQL_ROW row;
+  struct items * items;
+  struct electronics_room * elec_room;
+
+  items = calloc(1, sizeof(struct items));
+  list_init(&items->item_list);
+
+  res = db_query_res(buffer); 
+  while (row = mysql_fetch_row(res)) 
+  {
+    char * room_id = row[0];
+
+    char * iid = row[1];
+    char * upc = row[2];
+    char * desc = row[3];
+    char * quantity = row[4];
+    char * purchase_price = row[5];
+    char * detail = row[6];
+
+    char * serial_number = row[7];
+    char * electronic_type = row[8];
+    char * model = row[9];
+ 
+    char * room_desc = row[10];
+
+    elec_room = calloc(1, sizeof(struct electronics_room));
+
+    list_init(&elec_room->item.node);
+ 
+    elec_room->room.room_id = calloc(strlen(room_id) + 1, sizeof(char));
+
+    elec_room->item.iid = calloc(strlen(iid) + 1, sizeof(char));
+    elec_room->item.upc = calloc(strlen(upc) + 1, sizeof(char));
+    elec_room->item.desc = calloc(strlen(desc) + 1, sizeof(char));
+    elec_room->item.quantity = calloc(strlen(quantity) + 1, sizeof(char));
+    elec_room->item.purchase_price = calloc(strlen(purchase_price) + 1, sizeof(char));
+    elec_room->item.detail = calloc(strlen(detail) + 1, sizeof(char));
+
+    elec_room->elec.serial_number = calloc(strlen(serial_number) + 1, sizeof(char));
+    elec_room->elec.electronic_type = calloc(strlen(electronic_type) + 1, sizeof(char));
+    elec_room->elec.model = calloc(strlen(model) + 1, sizeof(char));
+
+    elec_room->room.desc = calloc(strlen(room_desc) + 1, sizeof(char));
+  
+    strncpy(elec_room->room.room_id, room_id, strlen(room_id));
+
+    strncpy(elec_room->item.iid, iid, strlen(iid));
+    strncpy(elec_room->item.upc, upc, strlen(upc));
+    strncpy(elec_room->item.desc, desc, strlen(desc));
+    strncpy(elec_room->item.quantity, quantity, strlen(quantity));
+    strncpy(elec_room->item.purchase_price, purchase_price, strlen(purchase_price));
+    strncpy(elec_room->item.detail, detail, strlen(detail));
+
+    strncpy(elec_room->elec.serial_number, serial_number, strlen(serial_number));
+    strncpy(elec_room->elec.electronic_type, electronic_type, strlen(model));
+    strncpy(elec_room->elec.model, model, strlen(model));
+    
+    strncpy(elec_room->room.desc, room_desc, strlen(room_desc));
+
+    elec_room->room.room_id[strlen(room_id)] = '\0';
+
+    elec_room->item.iid[strlen(iid)] = '\0';
+    elec_room->item.upc[strlen(upc)] = '\0';
+    elec_room->item.desc[strlen(desc)] = '\0';
+    elec_room->item.quantity[strlen(quantity)] = '\0';
+    elec_room->item.purchase_price[strlen(purchase_price)] = '\0';
+    elec_room->item.detail[strlen(detail)] = '\0';
+
+    elec_room->elec.serial_number[strlen(serial_number)] = '\0';
+    elec_room->elec.electronic_type[strlen(electronic_type)] = '\0';
+    elec_room->elec.model[strlen(model)] = '\0';
+    
+    elec_room->room.desc[strlen(desc)] = '\0';
+  
+    list_push_back(&items->item_list, &elec_room->item.node);
+  }
+
+  return items;
+}
 struct storings * storings_get_all()
 {
   char buffer[200];
@@ -56,11 +140,19 @@ struct storings * storings_get_all()
   return get(buffer);
 }
 
+struct items * get_model_storings(char * model)
+{
+  char buffer[200];
+  sprintf(buffer, "SELECT * FROM Item natural join Electronics natural join Store natural join Room where model = '%s'", 
+                  model);
+  return elec_store_room_get(buffer);
+}
+
 int storing_delete(struct storing * storing)
 {
   char buffer[200];
 
-  sprintf(buffer, "DELETE FROM Store where iid = '%s'", storing->iid);
+  sprintf(buffer, "DELETE FROM Store where price_id = '%s'", storing->iid);
   db_query(buffer); 
   return 0;
 }
