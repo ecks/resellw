@@ -157,8 +157,8 @@ void menu_display_listings(struct listings * listings, int * i_ptr)
 
   LIST_FOR_EACH(listing, struct listing, node, L_LIST(listings))
   {
-    item = item_get_iid(listing->iid);
-    price = price_get_price_id(listing->price_id);
+    item = item_get_iid(listing->item.iid);
+    price = price_get_price_id(listing->price.price_id);
 
     printf("%d) Item (UPC: %s, Description: %s, Quantity: %s, Purchase Price: %s) Listed with Price (Type: %s, Sell Price: %s)\n", *i_ptr, item->upc, item->desc, item->quantity, item->purchase_price, price->type_of_price, price->sell_price);
     (*i_ptr)++;  

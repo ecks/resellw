@@ -208,7 +208,7 @@ struct item_rooms * elec_store_room_get(char * buffer)
 struct storings * storings_get_all()
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item natural join Stor natural join Room");
+  sprintf(buffer, "SELECT * FROM Item natural join Store natural join Room");
   return item_store_room_get(buffer);
 }
 

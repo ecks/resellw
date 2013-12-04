@@ -105,7 +105,7 @@ struct items * get(char * buffer)
   MYSQL_RES * res;
   MYSQL_ROW row;
   struct items * items;
-  struct item * item;
+  struct itemer * itemer;
 
   items = calloc(1, sizeof(struct items));
   list_init(&items->item_list);
@@ -120,38 +120,39 @@ struct items * get(char * buffer)
     char * purchase_price = row[4];
     char * detail = row[5];
 
-    item = calloc(1, sizeof(struct item));
-    list_init(&item->node);
-    item->iid = calloc(strlen(iid) + 1, sizeof(char)); // 1 extra for null terminating output
-    item->upc = calloc(strlen(upc) + 1, sizeof(char)); // 1 extra for null terminating output
-    item->desc = calloc(strlen(desc) + 1, sizeof(char)); // 1 extra for null terminating output
-    item->quantity = calloc(strlen(quantity) + 1, sizeof(char)); // 1 extra for null terminating output
-    item->purchase_price = calloc(strlen(purchase_price) + 1, sizeof(char)); // 1 extra for null terminating output
+    itemer = calloc(1, sizeof(struct itemer));
+    list_init(&itemer->node);
+
+    itemer->item.iid = calloc(strlen(iid) + 1, sizeof(char)); // 1 extra for null terminating output
+    itemer->item.upc = calloc(strlen(upc) + 1, sizeof(char)); // 1 extra for null terminating output
+    itemer->item.desc = calloc(strlen(desc) + 1, sizeof(char)); // 1 extra for null terminating output
+    itemer->item.quantity = calloc(strlen(quantity) + 1, sizeof(char)); // 1 extra for null terminating output
+    itemer->item.purchase_price = calloc(strlen(purchase_price) + 1, sizeof(char)); // 1 extra for null terminating output
 
     if(detail != NULL)
-      item->detail = calloc(strlen(detail) + 1, sizeof(char)); // 1 extra for null terminating output
+      itemer->item.detail = calloc(strlen(detail) + 1, sizeof(char)); // 1 extra for null terminating output
     else
-      item->detail = detail;
+      itemer->item.detail = detail;
 
-    strncpy(item->iid, iid, strlen(iid));
-    strncpy(item->upc, upc, strlen(upc));
-    strncpy(item->desc, desc, strlen(desc));
-    strncpy(item->quantity, quantity, strlen(quantity));
-    strncpy(item->purchase_price, purchase_price, strlen(purchase_price));
-
-    if(detail != NULL)
-      strncpy(item->detail, detail, strlen(detail));
-
-    item->iid[strlen(iid)] = '\0';
-    item->upc[strlen(upc)] = '\0';
-    item->desc[strlen(desc)] = '\0';
-    item->quantity[strlen(quantity)] = '\0';
-    item->purchase_price[strlen(purchase_price)] = '\0';
+    strncpy(itemer->item.iid, iid, strlen(iid));
+    strncpy(itemer->item.upc, upc, strlen(upc));
+    strncpy(itemer->item.desc, desc, strlen(desc));
+    strncpy(itemer->item.quantity, quantity, strlen(quantity));
+    strncpy(itemer->item.purchase_price, purchase_price, strlen(purchase_price));
 
     if(detail != NULL)
-      item->detail[strlen(detail)] = '\0';
+      strncpy(itemer->item.detail, detail, strlen(detail));
 
-    list_push_back(&items->item_list, &item->node);    
+    itemer->item.iid[strlen(iid)] = '\0';
+    itemer->item.upc[strlen(upc)] = '\0';
+    itemer->item.desc[strlen(desc)] = '\0';
+    itemer->item.quantity[strlen(quantity)] = '\0';
+    itemer->item.purchase_price[strlen(purchase_price)] = '\0';
+
+    if(detail != NULL)
+      itemer->item.detail[strlen(detail)] = '\0';
+
+    list_push_back(&items->item_list, &itemer->node);    
   }
 
   mysql_free_result(res);
@@ -191,7 +192,7 @@ struct items * elec_get(char * buffer, struct items * items_par)
 
     elec = calloc(1, sizeof(struct electronics));
 
-    list_init(&elec->item.node);
+    list_init(&elec->node);
  
     elec->item.iid = calloc(strlen(iid) + 1, sizeof(char));
     elec->item.upc = calloc(strlen(upc) + 1, sizeof(char));
@@ -226,7 +227,7 @@ struct items * elec_get(char * buffer, struct items * items_par)
     elec->elec.electronic_type[strlen(electronic_type)] = '\0';
     elec->elec.model[strlen(model)] = '\0';
   
-    list_push_back(&items->item_list, &elec->item.node);
+    list_push_back(&items->item_list, &elec->node);
   }
 
   return items;
@@ -273,15 +274,15 @@ struct items * items_get_upc(char * upc)
 struct item * item_get(char * upc, char * description, char * quantity, char * purchase_price)
 {
   struct items * items;
-  struct item * item;
+  struct itemer * itemer;
 
   items = items_get(upc, description, quantity, purchase_price);
 
   assert(list_size(I_LIST(items)) == 1);
-  item = I_CONT(list_pop_front(&items->item_list));
+  itemer = I_CONT(list_pop_front(&items->item_list));
   free(items);
 
-  return item;
+  return &itemer->item;
 }
 
 struct items * items_get_iid(char * iid)
@@ -296,7 +297,7 @@ struct items * items_get_iid(char * iid)
 struct item * item_get_iid(char * iid)
 {
   struct items * items;
-  struct itemer * item;
+  struct itemer * itemer;
 
   items = items_get_iid(iid);
 
@@ -304,7 +305,7 @@ struct item * item_get_iid(char * iid)
   itemer = I_CONT(list_pop_front(&items->item_list));
   free(items);
 
-  return itemer->item;
+  return &itemer->item;
 }
 
 struct items * items_electronics_get_all(struct items * items)
@@ -370,7 +371,7 @@ struct items * cloth_get(char * buffer, struct items * items_par)
 
     cloth = calloc(1, sizeof(struct clothing));
 
-    list_init(&cloth->item.node);
+    list_init(&cloth->node);
  
     cloth->item.iid = calloc(strlen(iid) + 1, sizeof(char));
     cloth->item.upc = calloc(strlen(upc) + 1, sizeof(char));
@@ -402,7 +403,7 @@ struct items * cloth_get(char * buffer, struct items * items_par)
     cloth->cloth.clothing_brand[strlen(clothing_brand)] = '\0';
     cloth->cloth.size[strlen(size)] = '\0';
   
-    list_push_back(&items->item_list, &cloth->item.node);
+    list_push_back(&items->item_list, &cloth->node);
   }
 
   return items;
@@ -471,7 +472,7 @@ struct items * bathbody_get(char * buffer, struct items * items_par)
 
     bb = calloc(1, sizeof(struct bathbody));
 
-    list_init(&bb->item.node);
+    list_init(&bb->node);
  
     bb->item.iid = calloc(strlen(iid) + 1, sizeof(char));
     bb->item.upc = calloc(strlen(upc) + 1, sizeof(char));
@@ -503,7 +504,7 @@ struct items * bathbody_get(char * buffer, struct items * items_par)
     bb->bb.bathbody_brand[strlen(bathbody_brand)] = '\0';
     bb->bb.feature[strlen(feature)] = '\0';
   
-    list_push_back(&items->item_list, &bb->item.node);
+    list_push_back(&items->item_list, &bb->node);
   }
 
   return items;
@@ -582,10 +583,10 @@ int item_delete(struct item * item)
 
 int items_delete(struct items * items)
 {
-  struct item * item;
-  LIST_FOR_EACH(item, struct item, node, &items->item_list)
+  struct itemer * itemer;
+  I_EACH(itemer, items)
   {
-    item_delete(item);
+    item_delete(&itemer->item);
   }
 
   return 0;

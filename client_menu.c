@@ -75,8 +75,8 @@ void client_menu_search_detailed()
 
 void client_menu_search_price()
 {
-  struct prices * prices;
-  struct listed_price * l_price;
+  struct listings * listings;
+  struct listing * listing;
   char * low_price;
   char * high_price;
   unsigned int type_of_price;
@@ -95,25 +95,25 @@ void client_menu_search_price()
   switch(type_of_price)
   {
     case 1:
-      prices = get_range_sell_price_listings(low_price, high_price);
+      listings = get_range_sell_price_listings(low_price, high_price);
       break;
 
     case 2:
-      prices = get_range_sell_price_listings_bid(low_price, high_price);
+      listings = get_range_sell_price_listings_bid(low_price, high_price);
       break;
 
     case 3:
-      prices = get_range_sell_price_listings_buy_now(low_price, high_price);
+      listings = get_range_sell_price_listings_buy_now(low_price, high_price);
       break;
 
     default:
       printf("Unknown choice");
       return;
   }
-  LIST_FOR_EACH(l_price, struct listed_price, item.node, &prices->price_list)
+  L_EACH(listing, listings)
   {
     printf("Item UPC: %s, Description: %s, Quantity: %s, Purchase Price: %s, Type of Sell: %s, Sell Price: %s\n", 
-           l_price->item.upc, l_price->item.desc, l_price->item.quantity, l_price->item.purchase_price, l_price->type_of_price, l_price->sell_price);
+           listing->item.upc, listing->item.desc, listing->item.quantity, listing->item.purchase_price, listing->price.type_of_price, listing->price.sell_price);
   }
 }
 
