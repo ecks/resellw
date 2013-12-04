@@ -74,11 +74,7 @@ struct storings * item_store_room_get(char * buffer)
     char * purchase_price = row[5];
     char * detail = row[6];
 
-    char * serial_number = row[7];
-    char * electronic_type = row[8];
-    char * model = row[9];
- 
-    char * room_desc = row[10];
+    char * room_desc = row[7];
 
     storing = calloc(1, sizeof(struct storing));
 
@@ -91,7 +87,6 @@ struct storings * item_store_room_get(char * buffer)
     storing->item.desc = calloc(strlen(desc) + 1, sizeof(char));
     storing->item.quantity = calloc(strlen(quantity) + 1, sizeof(char));
     storing->item.purchase_price = calloc(strlen(purchase_price) + 1, sizeof(char));
-    storing->item.detail = calloc(strlen(detail) + 1, sizeof(char));
 
     storing->room.desc = calloc(strlen(room_desc) + 1, sizeof(char));
   
@@ -102,7 +97,6 @@ struct storings * item_store_room_get(char * buffer)
     strncpy(storing->item.desc, desc, strlen(desc));
     strncpy(storing->item.quantity, quantity, strlen(quantity));
     strncpy(storing->item.purchase_price, purchase_price, strlen(purchase_price));
-    strncpy(storing->item.detail, detail, strlen(detail));
 
     strncpy(storing->room.desc, room_desc, strlen(room_desc));
 
@@ -113,7 +107,6 @@ struct storings * item_store_room_get(char * buffer)
     storing->item.desc[strlen(desc)] = '\0';
     storing->item.quantity[strlen(quantity)] = '\0';
     storing->item.purchase_price[strlen(purchase_price)] = '\0';
-    storing->item.detail[strlen(detail)] = '\0';
 
     storing->room.desc[strlen(desc)] = '\0';
   
@@ -224,7 +217,7 @@ int storing_delete(struct storing * storing)
 {
   char buffer[200];
 
-  sprintf(buffer, "DELETE FROM Store where price_id = '%s'", storing->item.iid);
+  sprintf(buffer, "DELETE FROM Store where iid = '%s'", storing->item.iid);
   db_query(buffer); 
   return 0;
 }
