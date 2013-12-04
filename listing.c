@@ -127,21 +127,21 @@ struct listings * listings_get_all()
   return get(buffer);
 }
 
-struct prices * get_range_sell_price_listings_bid(char * low_price, char * high_price)
+struct listings * get_range_sell_price_listings_bid(char * low_price, char * high_price)
 {
   char buffer[200];
   sprintf(buffer, "SELECT * FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s AND type_of_price='bid'", low_price, high_price);
   return listing_sell_price_get(buffer);
 }
 
-struct prices * get_range_sell_price_listings_buy_now(char * low_price, char * high_price)
+struct listings * get_range_sell_price_listings_buy_now(char * low_price, char * high_price)
 {
   char buffer[200];
   sprintf(buffer, "SELECT * FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s AND type_of_price='buy now'", low_price, high_price);
   return listing_sell_price_get(buffer);
 }
 
-struct prices * get_range_sell_price_listings(char * low_price, char * high_price)
+struct listings * get_range_sell_price_listings(char * low_price, char * high_price)
 {
   char buffer[200];
   sprintf(buffer, "SELECT * FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s", low_price, high_price);

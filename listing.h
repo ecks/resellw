@@ -15,6 +15,8 @@ struct listing
 
 #define L_LIST(ptr) (&ptr->listing_list)
 
+#define L_EACH(listing, listings) LIST_FOR_EACH(listing, struct listing, node, L_LIST(listing))
+
 extern int listing_add(char * iid, char * price_id);
 extern struct listings * listings_get_all();
 extern struct prices * get_range_sell_price_listings_bid(char * low_price, char * high_price);

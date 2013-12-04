@@ -296,15 +296,15 @@ struct items * items_get_iid(char * iid)
 struct item * item_get_iid(char * iid)
 {
   struct items * items;
-  struct item * item;
+  struct itemer * item;
 
   items = items_get_iid(iid);
 
   assert(list_size(I_LIST(items)) == 1);
-  item = I_CONT(list_pop_front(&items->item_list));
+  itemer = I_CONT(list_pop_front(&items->item_list));
   free(items);
 
-  return item;
+  return itemer->item;
 }
 
 struct items * items_electronics_get_all(struct items * items)
