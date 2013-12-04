@@ -163,7 +163,6 @@ struct items * elec_get(char * buffer, struct items * items_par)
   MYSQL_RES * res;
   MYSQL_ROW row;
   struct items * items;
-  struct item * item;
   struct electronics * elec;
 
   if(items_par == NULL)

@@ -38,7 +38,7 @@ void client_menu_search_detailed()
   char * elec_model;
   char * clothing_brand;
   char * bathbody_brand;
-  struct items * items;
+  struct item_rooms * item_rooms;
   struct electronics * electronics;
   unsigned int detail_type;
 
@@ -53,8 +53,8 @@ void client_menu_search_detailed()
     case 1:
       printf("Please enter Electronics model: ");
       elec_model = getline();
-      items = get_model_storings(elec_model);
-      menu_display_items_rooms_detailed(items);
+      item_rooms = get_elec_model_storings(elec_model);
+      menu_display_items_rooms_detailed(item_rooms);
       break;
 
     case 2:
@@ -95,15 +95,15 @@ void client_menu_search_price()
   switch(type_of_price)
   {
     case 1:
-      prices = prices_get_range_sell_price(low_price, high_price);
+      prices = get_range_sell_price_listings(low_price, high_price);
       break;
 
     case 2:
-      prices = prices_get_range_sell_price_bid(low_price, high_price);
+      prices = get_range_sell_price_listings_bid(low_price, high_price);
       break;
 
     case 3:
-      prices = prices_get_range_sell_price_buy_now(low_price, high_price);
+      prices = get_range_sell_price_listings_buy_now(low_price, high_price);
       break;
 
     default:

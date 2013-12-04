@@ -51,12 +51,104 @@ struct listings * get(char * buffer)
   return listings;
 }
 
+struct listings * listing_sell_price_get(char * buffer)
+{
+  MYSQL_RES * res;
+  MYSQL_ROW row;
+  struct listings * listings;
+  struct listing * l;
+
+
+  listings = calloc(1, sizeof(struct listings));
+  list_init(&listings->listing_list);
+
+  res = db_query_res(buffer); 
+  while (row = mysql_fetch_row(res)) 
+  {
+    char * price_id = row[0];
+
+    char * iid = row[1];
+    char * upc = row[2];
+    char * description = row[3];
+    char * quantity = row[4];
+    char * purchase_price = row[5];
+    char * detail = row[6];
+
+    char * type_of_price = row[7];
+    char * sell_price = row[8];
+
+    listing = calloc(1, sizeof(struct listing));
+    list_init(&listing->node);
+
+    listing->price.price_id = calloc(strlen(price_id) + 1, sizeof(char)); // 1 extra for null terminating output
+
+    listing->item.iid = calloc(strlen(iid) + 1, sizeof(char)); // 1 extra for null terminating output
+    listing->item.upc = calloc(strlen(upc) + 1, sizeof(char)); // 1 extra for null terminating output
+    listing->item.desc = calloc(strlen(description) + 1, sizeof(char)); // 1 extra for null terminating output
+    listing->item.quantity = calloc(strlen(quantity) + 1, sizeof(char)); // 1 extra for null terminating output
+    listing->item.purchase_price = calloc(strlen(purchase_price) + 1, sizeof(char)); // 1 extra for null terminating output
+    
+    listing->type_of_price = calloc(strlen(type_of_price) + 1, sizeof(char)); // 1 extra for null terminating output
+    listing->sell_price = calloc(strlen(sell_price) + 1, sizeof(char)); // 1 extra for null terminating output
+
+    strncpy(listing->price_id, price_id, strlen(price_id));
+
+    strncpy(listing->item.iid, iid, strlen(iid));
+    strncpy(listing->item.upc, upc, strlen(upc));
+    strncpy(listing->item.desc, description, strlen(description));
+    strncpy(listing->item.quantity, quantity, strlen(quantity));
+    strncpy(listing->item.purchase_price, purchase_price, strlen(purchase_price));
+
+    strncpy(listing->type_of_price, type_of_price, strlen(type_of_price));
+    strncpy(listing->sell_price, sell_price, strlen(sell_price));
+
+    listing->price_id[strlen(price_id)] = '\0';
+
+    listing->item.iid[strlen(iid)] = '\0';
+    listing->item.upc[strlen(upc)] = '\0';
+    listing->item.desc[strlen(description)] = '\0';
+    listing->item.quantity[strlen(quantity)] = '\0';
+    listing->item.purchase_price[strlen(purchase_price)] = '\0';
+
+    listing->type_of_price[strlen(type_of_price)] = '\0';
+    listing->sell_price[strlen(sell_price)] = '\0';
+
+    list_push_back(&listings->listing_list, &listing->node);    
+  }
+
+  mysql_free_result(res);
+  return listings;
+}
+
 struct listings * listings_get_all()
 {
   char buffer[200];
   sprintf(buffer, "SELECT * FROM List");
   return get(buffer);
 }
+
+struct prices * get_range_sell_price_listings_bid(char * low_price, char * high_price)
+{
+  char buffer[200];
+  sprintf(buffer, "SELECT * FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s AND type_of_price='bid'", low_price, high_price);
+  return listing_sell_price_get(buffer);
+}
+
+struct prices * get_range_sell_price_listings_buy_now(char * low_price, char * high_price)
+{
+  char buffer[200];
+  sprintf(buffer, "SELECT * FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s AND type_of_price='buy now'", low_price, high_price);
+  return listing_sell_price_get(buffer);
+}
+
+struct prices * get_range_sell_price_listings(char * low_price, char * high_price)
+{
+  char buffer[200];
+  sprintf(buffer, "SELECT * FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s", low_price, high_price);
+  return listing_sell_price_get(buffer);
+}
+
+
 
 int listing_delete(struct listing * listing)
 {

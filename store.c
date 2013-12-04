@@ -35,14 +35,15 @@ struct storings * get(char * buffer)
 
     storing = calloc(1, sizeof(struct storing));
     list_init(&storing->node);
-    storing->iid = calloc(strlen(iid) + 1, sizeof(char)); // 1 extra for null terminating output
-    storing->room_id = calloc(strlen(room_id) + 1, sizeof(char)); // 1 extra for null terminating output
- 
-    strncpy(storing->iid, iid, strlen(iid));
-    strncpy(storing->room_id, room_id, strlen(room_id));
 
-    storing->iid[strlen(iid)] = '\0';
-    storing->room_id[strlen(room_id)] = '\0';
+    storing->item.iid = calloc(strlen(iid) + 1, sizeof(char)); // 1 extra for null terminating output
+    storing->room.room_id = calloc(strlen(room_id) + 1, sizeof(char)); // 1 extra for null terminating output
+ 
+    strncpy(storing->item.iid, iid, strlen(iid));
+    strncpy(storing->room.room_id, room_id, strlen(room_id));
+
+    storing->item.iid[strlen(iid)] = '\0';
+    storing->room.room_id[strlen(room_id)] = '\0';
 
     list_push_back(&storings->storing_list, &storing->node);    
   }
@@ -51,15 +52,15 @@ struct storings * get(char * buffer)
   return storings;
 }
 
-struct items * elec_store_room_get(char * buffer)
+struct item_rooms * elec_store_room_get(char * buffer)
 {
   MYSQL_RES * res;
   MYSQL_ROW row;
-  struct items * items;
+  struct item_rooms * item_rooms;
   struct electronics_room * elec_room;
 
-  items = calloc(1, sizeof(struct items));
-  list_init(&items->item_list);
+  item_rooms = calloc(1, sizeof(struct item_rooms));
+  list_init(&item_rooms->item_room_list);
 
   res = db_query_res(buffer); 
   while (row = mysql_fetch_row(res)) 
@@ -81,7 +82,7 @@ struct items * elec_store_room_get(char * buffer)
 
     elec_room = calloc(1, sizeof(struct electronics_room));
 
-    list_init(&elec_room->item.node);
+    list_init(&elec_room->node);
  
     elec_room->room.room_id = calloc(strlen(room_id) + 1, sizeof(char));
 
@@ -128,10 +129,10 @@ struct items * elec_store_room_get(char * buffer)
     
     elec_room->room.desc[strlen(desc)] = '\0';
   
-    list_push_back(&items->item_list, &elec_room->item.node);
+    list_push_back(&item_rooms->item_room_list, &elec_room->node);
   }
 
-  return items;
+  return item_rooms;
 }
 struct storings * storings_get_all()
 {
@@ -140,7 +141,7 @@ struct storings * storings_get_all()
   return get(buffer);
 }
 
-struct items * get_model_storings(char * model)
+struct item_rooms * get_elec_model_storings(char * model)
 {
   char buffer[200];
   sprintf(buffer, "SELECT * FROM Item natural join Electronics natural join Store natural join Room where model = '%s'", 
@@ -152,7 +153,7 @@ int storing_delete(struct storing * storing)
 {
   char buffer[200];
 
-  sprintf(buffer, "DELETE FROM Store where price_id = '%s'", storing->iid);
+  sprintf(buffer, "DELETE FROM Store where price_id = '%s'", storing->item.iid);
   db_query(buffer); 
   return 0;
 }

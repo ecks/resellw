@@ -14,7 +14,12 @@ struct item
   char * quantity;
   char * purchase_price;
   char * detail;
+};
+
+struct itemer
+{
   struct list node;
+  struct item item;
 };
 
 struct elec
@@ -26,6 +31,7 @@ struct elec
 
 struct electronics
 {
+  struct list node;
   struct item item;
   struct elec elec;
 };
@@ -38,6 +44,7 @@ struct cloth
 
 struct clothing
 {
+  struct list node;
   struct item item;
   struct cloth cloth;
 };
@@ -50,16 +57,22 @@ struct bb
 
 struct bathbody
 {
+  struct list node;
   struct item item;
   struct bb bb;
 };
 
 #define I_LIST(ptr) (&ptr->item_list)
 
-#define I_CONT(ptr) (CONTAINER_OF(ptr, struct item, node))
-#define E_CONT(ptr) (CONTAINER_OF(ptr, struct electronics, item.node))
-#define C_CONT(ptr) (CONTAINER_OF(ptr, struct clothing, item.node))
-#define B_CONT(ptr) (CONTAINER_OF(ptr, struct bathbody, item.node))
+#define I_CONT(ptr) (CONTAINER_OF(ptr, struct itemer, node))
+#define E_CONT(ptr) (CONTAINER_OF(ptr, struct electronics, node))
+#define C_CONT(ptr) (CONTAINER_OF(ptr, struct clothing, node))
+#define B_CONT(ptr) (CONTAINER_OF(ptr, struct bathbody, node))
+
+#define I_EACH(itemer, items) LIST_FOR_EACH(itemer, struct itemer, node, I_LIST(items))
+//#define E_EACH(itemer, items) LIST_FOR_EACH(itemer, struct electronics, node, I_LIST(rooms))
+//#define C_EACH(itemer, items) LIST_FOR_EACH(itemer, struct itemer, node, I_LIST(rooms))
+//#define B_EACH(itemer, items) LIST_FOR_EACH(itemer, struct itemer, node, I_LIST(rooms))
 
 extern int item_add(char * upc, char * description, char * quantity, char * purchase_price, char * detail);
 extern int item_electronics_add(char * upc, char * description, char * quantity, char * purchase_price, char * serial_number, char * electronic_type, char * model);

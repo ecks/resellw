@@ -42,58 +42,58 @@ void menu_display_prices(struct prices * prices, int * i_ptr)
 
 void menu_display_items(struct items * items, int * i_ptr)
 {
-  struct item * item;
+  struct itemer * itemer;
 
-  LIST_FOR_EACH(item, struct item, node, I_LIST(items))
+  I_EACH(itemer, items)
   {   
-    printf("%d) Item UPC: %s, Description: %s, Quantity: %s, Purchase Price: %s\n", *i_ptr, item->upc, item->desc, item->quantity, item->purchase_price);
+    printf("%d) Item UPC: %s, Description: %s, Quantity: %s, Purchase Price: %s\n", *i_ptr, itemer->item.upc, itemer->item.desc, itemer->item.quantity, itemer->item.purchase_price);
     (*i_ptr)++;
   }   
 }
 
 void menu_display_items_detailed(struct items * items)
 {
-  struct item * item;
+  struct itemer * itemer;
 
   int i = 1;
-  LIST_FOR_EACH(item, struct item, node, I_LIST(items))
+  I_EACH(itemer, items)
   {
     printf("%d) ", i);
-    if(strcmp(item->detail, "elec") == 0)
+    if(strcmp(itemer->item.detail, "elec") == 0)
     {
-      menu_display_item_electronics((struct electronics *)item);
+      menu_display_item_electronics((struct electronics *)itemer);
     }
-    else if(strcmp(item->detail, "clothing") == 0)
+    else if(strcmp(itemer->item.detail, "clothing") == 0)
     {
-      menu_display_item_clothing((struct clothing *)item);
+      menu_display_item_clothing((struct clothing *)itemer);
     }
-    else if(strcmp(item->detail, "bathbody") == 0)
+    else if(strcmp(itemer->item.detail, "bathbody") == 0)
     {
-      menu_display_item_bathbody((struct bathbody *)item);
+      menu_display_item_bathbody((struct bathbody *)itemer);
     }
     i++;
   }
 }
 
-void menu_display_items_rooms_detailed(struct items * items)
+void menu_display_items_rooms_detailed(struct item_rooms * item_rooms)
 {
-  struct item * item;
+  struct itemer * itemer;
 
   int i = 1;
-  LIST_FOR_EACH(item, struct item, node, I_LIST(items))
+  IR_EACH(itemer, item_rooms)
   {
     printf("%d) ", i);
-    if(strcmp(item->detail, "elec") == 0)
+    if(strcmp(itemer->item.detail, "elec") == 0)
     {
-      menu_display_item_electronics_room((struct electronics_room *)item);
+      menu_display_item_electronics_room((struct electronics_room *)itemer);
     }
-    else if(strcmp(item->detail, "clothing") == 0)
+    else if(strcmp(itemer->item.detail, "clothing") == 0)
     {
-      menu_display_item_clothing_room((struct clothing_room *)item);
+      menu_display_item_clothing_room((struct clothing_room *)itemer);
     }
-    else if(strcmp(item->detail, "bathbody") == 0)
+    else if(strcmp(itemer->item.detail, "bathbody") == 0)
     {
-      menu_display_item_bathbody_room((struct bathbody_room *)item);
+      menu_display_item_bathbody_room((struct bathbody_room *)itemer);
     }
     i++;
   }
@@ -142,10 +142,10 @@ void menu_display_storings(struct storings * storings, int * i_ptr)
   struct item * item;
   struct roomer * roomer;
 
-  LIST_FOR_EACH(storing, struct storing, node, S_LIST(storings))
+  S_EACH(storing, storings)
   {
-    item = item_get_iid(storing->iid);
-    roomer = room_get_room_id(storing->room_id);
+    item = item_get_iid(storing->item.iid);
+    roomer = room_get_room_id(storing->room.room_id);
 
     printf("%d) Item (UPC: %s, Description: %s, Quantity: %s, Purchase Price: %s) Stored in Room (%s)\n", *i_ptr, item->upc, item->desc, item->quantity, item->purchase_price, roomer->room.desc);
     (*i_ptr)++;  

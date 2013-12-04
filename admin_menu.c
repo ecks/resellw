@@ -266,7 +266,7 @@ void admin_menu_items_modify()
 {
   unsigned int choice;
   struct items * items;
-  struct item * item;
+  struct itemer * itemer;
   char * show_info;
   char * modify_info;
   bool detail;
@@ -311,17 +311,17 @@ void admin_menu_items_modify()
     }
  
     int j = 1;
-    LIST_FOR_EACH(item, struct item, node, &items->item_list)
+    I_EACH(itemer, items)
     {
       if(choice == j)
       {
         if(detail == true)
         {
-          admin_menu_display_item_choice_detailed(item);  
+          admin_menu_display_item_choice_detailed(&itemer->item);  
         }
         else
         {
-          admin_menu_display_item_choice(item);
+          admin_menu_display_item_choice(&itemer->item);
         }
       }
       j++;
@@ -332,7 +332,7 @@ void admin_menu_items_modify()
 void admin_menu_items_delete()
 {
   struct items * items;
-  struct item * item;
+  struct itemer * itemer;
   int i = 1;
   unsigned int choice;
 
@@ -355,11 +355,11 @@ void admin_menu_items_delete()
     else
     {
       int j = 1;
-      LIST_FOR_EACH(item, struct item, node, &items->item_list)
+      I_EACH(itemer, items)
       {
         if(choice == j)
         {
-          item_delete(item);
+          item_delete(&itemer->item);
           break;
         } 
         j++;
@@ -521,7 +521,7 @@ void admin_menu_prices_delete()
 void admin_menu_storings_add()
 {
   struct items * items;
-  struct item * item;
+  struct itemer * itemer;
   struct rooms * rooms;
   struct roomer * roomer;
 
@@ -532,7 +532,7 @@ void admin_menu_storings_add()
   int j = 1;
 
   items = items_get_all();
-  if(list_empty(&items->item_list))
+  if(list_empty(I_LIST(items)))
   {
     printf("No Items found, please add an item before storing it in a Room\n");
     return;
@@ -562,7 +562,7 @@ void admin_menu_storings_add()
   }
 
   i = 1;
-  LIST_FOR_EACH(item, struct item, node, &items->item_list)
+  I_EACH(itemer, items)
   {
     if(item_choice == i)
     {
@@ -571,7 +571,7 @@ void admin_menu_storings_add()
       {
         if(room_choice == j)
         {
-          storing_add(item->iid, roomer->room.room_id);
+          storing_add(itemer->item.iid, roomer->room.room_id);
         }
         j++;
       }
@@ -632,7 +632,7 @@ void admin_menu_storings_delete()
 void admin_menu_listings_add()
 {
   struct items * items;
-  struct item * item;
+  struct itemer * itemer;
   struct prices * prices;
   struct price * price;
 
@@ -674,7 +674,7 @@ void admin_menu_listings_add()
   }
 
   i = 1;
-  LIST_FOR_EACH(item, struct item, node, &items->item_list)
+  I_EACH(itemer, items)
   {
     if(item_choice == i)
     {
@@ -683,7 +683,7 @@ void admin_menu_listings_add()
       {
         if(price_choice == j)
         {
-          listing_add(item->iid, price->price_id);
+          listing_add(itemer->item.iid, price->price_id);
         }
         j++;
       }
