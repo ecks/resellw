@@ -52,6 +52,77 @@ struct storings * get(char * buffer)
   return storings;
 }
 
+struct storings * item_store_room_get(char * buffer)
+{
+  MYSQL_RES * res;
+  MYSQL_ROW row;
+  struct storings * storings;
+  struct storing * storing;
+
+  storings = calloc(1, sizeof(struct storings));
+  list_init(&storings->storing_list);
+
+  res = db_query_res(buffer); 
+  while (row = mysql_fetch_row(res)) 
+  {
+    char * room_id = row[0];
+
+    char * iid = row[1];
+    char * upc = row[2];
+    char * desc = row[3];
+    char * quantity = row[4];
+    char * purchase_price = row[5];
+    char * detail = row[6];
+
+    char * serial_number = row[7];
+    char * electronic_type = row[8];
+    char * model = row[9];
+ 
+    char * room_desc = row[10];
+
+    storing = calloc(1, sizeof(struct storing));
+
+    list_init(&storing->node);
+ 
+    storing->room.room_id = calloc(strlen(room_id) + 1, sizeof(char));
+
+    storing->item.iid = calloc(strlen(iid) + 1, sizeof(char));
+    storing->item.upc = calloc(strlen(upc) + 1, sizeof(char));
+    storing->item.desc = calloc(strlen(desc) + 1, sizeof(char));
+    storing->item.quantity = calloc(strlen(quantity) + 1, sizeof(char));
+    storing->item.purchase_price = calloc(strlen(purchase_price) + 1, sizeof(char));
+    storing->item.detail = calloc(strlen(detail) + 1, sizeof(char));
+
+    storing->room.desc = calloc(strlen(room_desc) + 1, sizeof(char));
+  
+    strncpy(storing->room.room_id, room_id, strlen(room_id));
+
+    strncpy(storing->item.iid, iid, strlen(iid));
+    strncpy(storing->item.upc, upc, strlen(upc));
+    strncpy(storing->item.desc, desc, strlen(desc));
+    strncpy(storing->item.quantity, quantity, strlen(quantity));
+    strncpy(storing->item.purchase_price, purchase_price, strlen(purchase_price));
+    strncpy(storing->item.detail, detail, strlen(detail));
+
+    strncpy(storing->room.desc, room_desc, strlen(room_desc));
+
+    storing->room.room_id[strlen(room_id)] = '\0';
+
+    storing->item.iid[strlen(iid)] = '\0';
+    storing->item.upc[strlen(upc)] = '\0';
+    storing->item.desc[strlen(desc)] = '\0';
+    storing->item.quantity[strlen(quantity)] = '\0';
+    storing->item.purchase_price[strlen(purchase_price)] = '\0';
+    storing->item.detail[strlen(detail)] = '\0';
+
+    storing->room.desc[strlen(desc)] = '\0';
+  
+    list_push_back(S_LIST(storings), NODE(storing));
+  }
+
+  return storings;
+}
+
 struct item_rooms * elec_store_room_get(char * buffer)
 {
   MYSQL_RES * res;
@@ -137,8 +208,8 @@ struct item_rooms * elec_store_room_get(char * buffer)
 struct storings * storings_get_all()
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Store");
-  return get(buffer);
+  sprintf(buffer, "SELECT * FROM Item natural join Stor natural join Room");
+  return item_store_room_get(buffer);
 }
 
 struct item_rooms * get_elec_model_storings(char * model)

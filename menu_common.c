@@ -144,10 +144,7 @@ void menu_display_storings(struct storings * storings, int * i_ptr)
 
   S_EACH(storing, storings)
   {
-    item = item_get_iid(storing->item.iid);
-    roomer = room_get_room_id(storing->room.room_id);
-
-    printf("%d) Item (UPC: %s, Description: %s, Quantity: %s, Purchase Price: %s) Stored in Room (%s)\n", *i_ptr, item->upc, item->desc, item->quantity, item->purchase_price, roomer->room.desc);
+    printf("%d) Item (UPC: %s, Description: %s, Quantity: %s, Purchase Price: %s) Stored in Room (%s)\n", *i_ptr, storing->item.upc, storing->item.desc, storing->item.quantity, storing->item.purchase_price, storing->room.desc);
     (*i_ptr)++;  
   }
 }
