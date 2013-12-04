@@ -213,6 +213,16 @@ struct item_rooms * get_elec_model_storings(char * model)
   return elec_store_room_get(buffer);
 }
 
+int storing_modify(struct storing * storing, char * iid, char * room_id)
+{
+  char buffer[200];
+
+  sprintf(buffer, "Update Store SET iid=%s, room_id=%s where iid = '%s'", iid, room_id, storing->item.iid);
+  db_query(buffer); 
+  return 0;
+
+}
+
 int storing_delete(struct storing * storing)
 {
   char buffer[200];

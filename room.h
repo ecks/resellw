@@ -29,7 +29,8 @@ extern struct rooms * rooms_get_all();
 extern struct rooms * rooms_get(char *);
 extern struct rooms * rooms_get_room_id(char *);
 extern struct roomer * room_get_room_id(char *);
-extern int room_delete(struct roomer *);
+extern int room_modify(struct room * room, char * room_desc);
+extern int room_delete(struct room *);
 extern int rooms_delete(struct rooms *);
 
 #endif

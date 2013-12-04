@@ -94,7 +94,7 @@ void admin_menu_items_add()
 
 }
 
-void admin_menu_display_item_choice(struct item * item)
+void admin_menu_item_choice(struct item * item)
 {
   unsigned int choice;
   char * upc;
@@ -144,7 +144,7 @@ void admin_menu_display_item_choice(struct item * item)
   }
 }
 
-void admin_menu_display_item_choice_detailed(struct item * item)
+void admin_menu_item_choice_detailed(struct item * item)
 {
   unsigned int choice;
 
@@ -317,11 +317,11 @@ void admin_menu_items_modify()
       {
         if(detail == true)
         {
-          admin_menu_display_item_choice_detailed(&itemer->item);  
+          admin_menu_item_choice_detailed(&itemer->item);  
         }
         else
         {
-          admin_menu_display_item_choice(&itemer->item);
+          admin_menu_item_choice(&itemer->item);
         }
       }
       j++;
@@ -380,16 +380,44 @@ void admin_menu_rooms_add()
   room_add(room_desc);
 }
 
+void admin_menu_room_choice(struct room * room)
+{
+  char * room_desc;
+
+  printf("New Room Description: ");
+  room_desc = getline();
+  room_modify(room, room_desc);
+}
+
 void admin_menu_rooms_modify()
 {
   struct rooms * rooms;
   int i = 1;
   struct roomer * roomer;
+  unsigned int choice;
 
   rooms = rooms_get_all();
   menu_display_rooms(rooms, &i);
 
   printf("Please select the Room you want to modify\n");
+  if((choice = getchoice()) == 0)
+  {
+    printf("No line\n");
+    return;
+  }
+  else
+  {
+    int j = 1;
+    R_EACH(roomer, rooms)
+    {
+      if(choice == j)
+      {
+        admin_menu_room_choice(&roomer->room);
+        break;
+      } 
+      j++;
+    }
+  }
 }
 
 void admin_menu_rooms_delete()
@@ -422,7 +450,7 @@ void admin_menu_rooms_delete()
       {
         if(choice == j)
         {
-          room_delete(roomer);
+          room_delete(&roomer->room);
           break;
         } 
         j++;
@@ -581,9 +609,93 @@ void admin_menu_storings_add()
   }
 }
 
+void admin_menu_storing_choice(struct storing * storing)
+{
+  int i = 1;
+  int j = 1;
+
+  struct items * items;
+  struct itemer * itemer;
+  struct rooms * rooms;
+  struct roomer * roomer;
+
+  unsigned int item_choice;
+  unsigned int room_choice;
+
+  items = items_get_all();
+  menu_display_items(items, &i);
+
+  printf("Please select the Item you want to Store: ");
+  if((item_choice = getchoice()) == 0)
+  {
+    printf("No line\n");
+    return;
+  }
+  else
+  {
+    i = 1;
+    rooms = rooms_get_all();
+    menu_display_rooms(rooms, &i);
+
+    printf("Please select the Room you want to Store into: ");
+    if((room_choice = getchoice()) == 0)
+    {
+      printf("No line\n");
+      return;
+    }
+    else
+    {
+      i = 1;
+      I_EACH(itemer, items)
+      {
+        if(item_choice == i)
+        {
+          j = 1;
+          R_EACH(roomer, rooms)
+          {
+            if(room_choice == j)
+            {
+              storing_modify(storing, itemer->item.iid, roomer->room.room_id);
+            }
+            j++;
+          }
+        }
+        i++;
+      }
+    }
+  }
+}
+
 void admin_menu_storings_modify()
 {
+  unsigned int choice;
+  struct storings * storings;
+  struct storing * storing;
+  int i = 1;
 
+  storings = storings_get_all();
+
+  menu_display_storings(storings, &i);
+ 
+  printf("Please select the Storing you want to modify: ");
+  if((choice = getchoice()) == 0)
+  {
+    printf("No line\n");
+    return;
+  }
+  else
+  {
+    int j = 1;
+    S_EACH(storing, storings)
+    {
+      if(choice == j)
+      {
+        admin_menu_storing_choice(storing);
+        break;
+      } 
+      j++;
+    }
+ }
 }
 
 void admin_menu_storings_delete()
@@ -612,7 +724,7 @@ void admin_menu_storings_delete()
     else
     {
       int j = 1;
-      LIST_FOR_EACH(storing, struct storing, node, &storings->storing_list)
+      S_EACH(storing, storings)
       {
         if(choice == j)
         {

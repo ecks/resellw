@@ -93,11 +93,20 @@ struct roomer * room_get_room_id(char * room_id)
   return roomer;
 }
 
-int room_delete(struct roomer * roomer)
+int room_modify(struct room * room, char * room_desc)
 {
   char buffer[200];
 
-  sprintf(buffer, "DELETE FROM Room where room_id = '%s'", roomer->room.room_id);
+  sprintf(buffer, "UPDATE Room SET room_description='%s' WHERE room_id = '%s'", room_desc, room->room_id);
+  db_query(buffer); 
+  return 0;
+}
+
+int room_delete(struct room * room)
+{
+  char buffer[200];
+
+  sprintf(buffer, "DELETE FROM Room where room_id = '%s'", room->room_id);
   db_query(buffer); 
   return 0;
 }
@@ -108,7 +117,7 @@ int rooms_delete(struct rooms * rooms)
   struct roomer * roomer;
   R_EACH(roomer, rooms)
   {
-    room_delete(roomer);
+    room_delete(&roomer->room);
   }
 
   return 0;

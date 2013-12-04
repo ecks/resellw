@@ -53,6 +53,7 @@ extern int storing_add(char * iid, char * room_id);
 extern struct storings * storings_get_all();
 extern struct item_rooms * get_elec_model_storings(char * model);
 
+extern int storing_modify(struct storing * storing, char * iid, char * room_id);
 extern int storing_delete(struct storing * storing);
 extern int storings_delete(struct storings * storings);
 
