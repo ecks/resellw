@@ -382,23 +382,24 @@ void admin_menu_rooms_add()
 
 void admin_menu_rooms_modify()
 {
-/*  struct rooms * rooms = rooms_get_all();
+  struct rooms * rooms;
   int i = 1;
-  struct room * room;
-  LIST_FOR_EACH(room, struct room, node, &rooms->room_list)
-  {
-    printf("%d) Room %s\n", i, room->desc);
-  }
-  printf("Please select the Room you want to modify\n"); */
+  struct roomer * roomer;
+
+  rooms = rooms_get_all();
+  menu_display_rooms(rooms, &i);
+
+  printf("Please select the Room you want to modify\n");
 }
 
 void admin_menu_rooms_delete()
 {
-  struct rooms * rooms = rooms_get_all();
+  struct rooms * rooms;
   int i = 1;
   struct roomer * roomer;
   unsigned int choice;
 
+  rooms = rooms_get_all();
   menu_display_rooms(rooms, &i);
 
   printf("%d) All Rooms\n", i);

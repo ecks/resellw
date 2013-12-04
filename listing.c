@@ -19,41 +19,7 @@ int listing_add(char * iid, char * price_id)
   return 0;
 }
 
-struct listings * get(char * buffer)
-{
-  MYSQL_RES * res;
-  MYSQL_ROW row;
-  struct listings * listings;
-  struct listing * listing;
-
-  listings = calloc(1, sizeof(struct listings));
-  list_init(&listings->listing_list);
-
-  res = db_query_res(buffer); 
-  while (row = mysql_fetch_row(res)) 
-  {
-    char * iid = row[0];
-    char * price_id = row[1];
-
-    listing = calloc(1, sizeof(struct listing));
-    list_init(&listing->node);
-    listing->item.iid = calloc(strlen(iid) + 1, sizeof(char)); // 1 extra for null terminating output
-    listing->price.price_id = calloc(strlen(price_id) + 1, sizeof(char)); // 1 extra for null terminating output
- 
-    strncpy(listing->item.iid, iid, strlen(iid));
-    strncpy(listing->price.price_id, price_id, strlen(price_id));
-
-    listing->item.iid[strlen(iid)] = '\0';
-    listing->price.price_id[strlen(price_id)] = '\0';
-
-    list_push_back(&listings->listing_list, &listing->node);    
-  }
-
-  mysql_free_result(res);
-  return listings;
-}
-
-struct listings * listing_sell_price_get(char * buffer)
+struct listings * item_list_price_get(char * buffer)
 {
   MYSQL_RES * res;
   MYSQL_ROW row;
@@ -125,29 +91,29 @@ struct listings * listing_sell_price_get(char * buffer)
 struct listings * listings_get_all()
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM List");
-  return get(buffer);
+  sprintf(buffer, "SELECT * FROM Item natural join List natural join Price");
+  return item_list_price_get(buffer);
 }
 
 struct listings * get_range_sell_price_listings_bid(char * low_price, char * high_price)
 {
   char buffer[200];
   sprintf(buffer, "SELECT * FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s AND type_of_price='bid'", low_price, high_price);
-  return listing_sell_price_get(buffer);
+  return item_list_price_get(buffer);
 }
 
 struct listings * get_range_sell_price_listings_buy_now(char * low_price, char * high_price)
 {
   char buffer[200];
   sprintf(buffer, "SELECT * FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s AND type_of_price='buy now'", low_price, high_price);
-  return listing_sell_price_get(buffer);
+  return item_list_price_get(buffer);
 }
 
 struct listings * get_range_sell_price_listings(char * low_price, char * high_price)
 {
   char buffer[200];
   sprintf(buffer, "SELECT * FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s", low_price, high_price);
-  return listing_sell_price_get(buffer);
+  return item_list_price_get(buffer);
 }
 
 
