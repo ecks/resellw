@@ -18,6 +18,9 @@ char * getline(void)
         if(c == EOF)
             break;
 
+        if(c == '\'')
+          continue; // prevent SQL injection attacks
+
         if(c == '\n')
           break;
 

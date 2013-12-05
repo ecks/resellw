@@ -25,6 +25,12 @@ make admin
 
 How to run:
 
+Initially you need to set
+
+export LD_LIBRARY_PATH="/usr/local/mysql/lib/mysql"
+
+either at the shell or define it in init file.
+
 Assuming you are in the directory containing the binaries, you can type:
 
 ./admin
