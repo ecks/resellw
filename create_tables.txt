@@ -6,6 +6,7 @@ create TABLE Item (iid INTEGER NOT NULL AUTO_INCREMENT, upc VARCHAR(30) NOT NULL
 create TABLE Item (iid INTEGER NOT NULL AUTO_INCREMENT, upc VARCHAR(30) NOT NULL, description VARCHAR(30) NOT NULL, quantity INTEGER NOT NULL, purchase_price NUMERIC(4,2), detail ENUM('elec', 'clothing', 'bathbody'), PRIMARY KEY (iid));
 create TABLE Item (iid INTEGER NOT NULL AUTO_INCREMENT, upc VARCHAR(30) NOT NULL, description VARCHAR(30) NOT NULL, quantity INTEGER NOT NULL, purchase_price NUMERIC(4,2), detail ENUM('elec', 'clothing', 'bathbody'), PRIMARY KEY (iid)) Engine=InnoDB;
 create TABLE Item (iid INTEGER NOT NULL AUTO_INCREMENT, upc VARCHAR(30) NOT NULL, description VARCHAR(30) NOT NULL, quantity INTEGER NOT NULL, purchase_price NUMERIC(6,2), detail ENUM('elec', 'clothing', 'bathbody'), PRIMARY KEY (iid), INDEX (upc)) Engine=InnoDB;
+create TABLE Item (iid INTEGER NOT NULL AUTO_INCREMENT, upc VARCHAR(30) NOT NULL, description VARCHAR(30) NOT NULL, quantity INTEGER NOT NULL, purchase_price NUMERIC(6,2), detail ENUM('elec', 'clothing', 'bathbody'), image BLOB, PRIMARY KEY (iid), INDEX (upc)) Engine=InnoDB;
 
 Store table:
 create table Store (iid INTEGER, room_id INTEGER, PRIMARY KEY (iid), CONSTRAINT FOREIGN KEY (iid) REFERENCES Item(iid) ON DELETE CASCADE, CONSTRAINT FOREIGN KEY (room_id) REFERENCES Room(room_id) ON DELETE CASCADE) Engine=InnoDB;

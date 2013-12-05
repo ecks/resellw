@@ -1,0 +1,5 @@
+"1";"1CDBD";"laptop";"Satellite C655D-S5509"
+"2";"A2BCD";"camera";"DMC-G5K"
+"3";"F2DCA";"laptop";"Aspire S3-391-6899"
+"4";"X37FU";"laptop";"X55A-JH91"
+"5";"T8GA5";"camcorder";"HF G10"

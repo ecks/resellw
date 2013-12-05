@@ -74,7 +74,7 @@ struct storings * item_store_room_get(char * buffer)
     char * purchase_price = row[5];
     char * detail = row[6];
 
-    char * room_desc = row[7];
+    char * room_desc = row[8];
 
     storing = calloc(1, sizeof(struct storing));
 
@@ -138,11 +138,11 @@ struct item_rooms * elec_store_room_get(char * buffer)
     char * purchase_price = row[5];
     char * detail = row[6];
 
-    char * serial_number = row[7];
-    char * electronic_type = row[8];
-    char * model = row[9];
+    char * serial_number = row[8];
+    char * electronic_type = row[9];
+    char * model = row[10];
  
-    char * room_desc = row[10];
+    char * room_desc = row[11];
 
     elec_room = calloc(1, sizeof(struct electronics_room));
 
@@ -221,10 +221,10 @@ struct item_rooms * cloth_store_room_get(char * buffer)
     char * purchase_price = row[5];
     char * detail = row[6];
 
-    char * clothing_brand = row[7];
-    char * size = row[8];
+    char * clothing_brand = row[8];
+    char * size = row[9];
  
-    char * room_desc = row[9];
+    char * room_desc = row[10];
 
     cloth_room = calloc(1, sizeof(struct clothing_room));
 
@@ -300,10 +300,10 @@ struct item_rooms * bb_store_room_get(char * buffer)
     char * purchase_price = row[5];
     char * detail = row[6];
 
-    char * bathbody_brand = row[7];
-    char * feature = row[8];
+    char * bathbody_brand = row[8];
+    char * feature = row[9];
  
-    char * room_desc = row[9];
+    char * room_desc = row[10];
 
     bb_room = calloc(1, sizeof(struct clothing_room));
 

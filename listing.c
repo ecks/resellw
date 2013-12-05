@@ -42,8 +42,8 @@ struct listings * item_list_price_get(char * buffer)
     char * purchase_price = row[5];
     char * detail = row[6];
 
-    char * type_of_price = row[7];
-    char * sell_price = row[8];
+    char * type_of_price = row[8];
+    char * sell_price = row[9];
 
     listing = calloc(1, sizeof(struct listing));
     list_init(&listing->node);
@@ -124,7 +124,7 @@ int listing_modify(struct listing * listing, char * iid, char * price_id)
   sprintf(buffer, "Update List SET iid=%s, price_id=%s where price_id = '%s'", iid, price_id, listing->price.price_id);
   if((error = db_query(buffer)) == 1062)
   {
-//    printf("You cannot store an item in more than one Room\n");
+    printf("You cannot list a Price for more than one Item\n");
     return 1;   
   }
 

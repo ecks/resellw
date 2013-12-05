@@ -186,9 +186,9 @@ struct items * elec_get(char * buffer, struct items * items_par)
     char * purchase_price = row[4];
     char * detail = row[5];
 
-    char * serial_number = row[6];
-    char * electronic_type = row[7];
-    char * model = row[8];
+    char * serial_number = row[7];
+    char * electronic_type = row[8];
+    char * model = row[9];
 
     elec = calloc(1, sizeof(struct electronics));
 
@@ -366,8 +366,8 @@ struct items * cloth_get(char * buffer, struct items * items_par)
     char * purchase_price = row[4];
     char * detail = row[5];
 
-    char * clothing_brand = row[6];
-    char * size = row[7];
+    char * clothing_brand = row[7];
+    char * size = row[8];
 
     cloth = calloc(1, sizeof(struct clothing));
 
@@ -467,8 +467,8 @@ struct items * bathbody_get(char * buffer, struct items * items_par)
     char * purchase_price = row[4];
     char * detail = row[5];
 
-    char * bathbody_brand = row[6];
-    char * feature = row[7];
+    char * bathbody_brand = row[7];
+    char * feature = row[8];
 
     bb = calloc(1, sizeof(struct bathbody));
 
