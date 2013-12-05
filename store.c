@@ -12,8 +12,14 @@
 int storing_add(char * iid, char * room_id)
 {
   char buffer[200];
+  int error;
+
   sprintf(buffer, "INSERT INTO Store (iid, room_id) VALUES (%s, %s)", iid, room_id);
-  db_query(buffer); 
+  if((error = db_query(buffer)) == 1062)
+  {
+    printf("You cannot store an item in more than one Room...\n");
+    return 1;   
+  }
   return 0;
 }
 

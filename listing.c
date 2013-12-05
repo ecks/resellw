@@ -14,8 +14,14 @@ static struct listings * get(char * buffer);
 int listing_add(char * iid, char * price_id)
 {
   char buffer[200];
+  int error;
+
   sprintf(buffer, "INSERT INTO List (iid, price_id) VALUES (%s, %s)", iid, price_id);
-  db_query(buffer); 
+  if((error = db_query(buffer)) == 1062)
+  {
+    printf("You cannot list a Price for more than one Item\n");
+    return 1;   
+  }
   return 0;
 }
 
