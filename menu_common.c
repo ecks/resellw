@@ -31,11 +31,11 @@ void menu_display_rooms(struct rooms * rooms, int * i_ptr)
 
 void menu_display_prices(struct prices * prices, int * i_ptr)
 {
-  struct price * price;
+  struct pricer * pricer;
 
-  LIST_FOR_EACH(price, struct price, node, P_LIST(prices))
+  P_EACH(pricer, prices)
   {
-    printf("%d) Price type:  %s, selling price: %s\n", *i_ptr, price->type_of_price, price->sell_price);
+    printf("%d) Price type:  %s, selling price: %s\n", *i_ptr, pricer->price.type_of_price, pricer->price.sell_price);
     (*i_ptr)++;
   }
 }

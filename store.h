@@ -52,6 +52,8 @@ struct bathbody_room
 extern int storing_add(char * iid, char * room_id);
 extern struct storings * storings_get_all();
 extern struct item_rooms * get_elec_model_storings(char * model);
+extern struct item_rooms * get_cloth_brand_storings(char * clothing_brand);
+extern struct item_rooms * get_bb_brand_storings(char * bathbody_brand);
 
 extern int storing_modify(struct storing * storing, char * iid, char * room_id);
 extern int storing_delete(struct storing * storing);

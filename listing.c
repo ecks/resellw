@@ -116,7 +116,20 @@ struct listings * get_range_sell_price_listings(char * low_price, char * high_pr
   return item_list_price_get(buffer);
 }
 
+int listing_modify(struct listing * listing, char * iid, char * price_id)
+{
+  char buffer[200];
+  int error;
 
+  sprintf(buffer, "Update List SET iid=%s, price_id=%s where price_id = '%s'", iid, price_id, listing->price.price_id);
+  if((error = db_query(buffer)) == 1062)
+  {
+//    printf("You cannot store an item in more than one Room\n");
+    return 1;   
+  }
+
+  return 0;
+}
 
 int listing_delete(struct listing * listing)
 {

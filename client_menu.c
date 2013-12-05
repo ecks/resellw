@@ -60,11 +60,15 @@ void client_menu_search_detailed()
     case 2:
       printf("Please enter Clothing brand: ");
       clothing_brand = getline();
+      item_rooms = get_cloth_brand_storings(clothing_brand);
+      menu_display_items_rooms_detailed(item_rooms);
       break;
 
     case 3:
       printf("Please enter Bath and Body brand: ");
       bathbody_brand = getline();
+      item_rooms = get_bb_brand_storings(bathbody_brand);
+      menu_display_items_rooms_detailed(item_rooms);
       break;
 
     default:

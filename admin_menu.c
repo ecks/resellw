@@ -139,7 +139,7 @@ void admin_menu_item_choice(struct item * item)
       break;
 
     default:
-      printf("Not a valid choice");
+      printf("Not a valid choice\n");
       return;
   }
 }
@@ -498,15 +498,98 @@ void admin_menu_prices_add()
   }
 }
 
+void admin_menu_price_choice(struct price * price)
+{
+  unsigned int column_choice;
+  unsigned int type_choice;
+  char * sell_price;
+
+
+  printf("1) Type of Price\n");
+  printf("2) Sell Price\n");
+  printf("Please select column of Price you would like to modify: ");
+  if((column_choice = getchoice()) == 0)
+  {
+    printf("No line\n");
+    return;
+  }
+  switch (column_choice)
+  {
+    case 1:
+      printf("1) Bid\n");
+      printf("2) Buy Now\n");
+      printf("Please select the type of price you want to modify to: ");
+      if((type_choice = getchoice()) == 0)
+      {
+        printf("No line\n");
+        return;
+      }
+      else
+      {
+        switch (type_choice)
+        {
+          case 1:
+            price_modify(price, "type_of_price", "bid");
+            break;
+            
+          case 2:
+            price_modify(price, "type_of_price", "buy now");
+            break;
+
+          default:
+            printf("Not a valid choice\n");
+            return;
+        }
+      }
+      break;
+
+    case 2:
+      printf("New Sell Price: ");
+      sell_price = getline();
+      price_modify(price, "sell_price", sell_price);
+      break;
+
+    default:
+      printf("Not a valid choice\n");
+      return;
+  }
+}
+
 void admin_menu_prices_modify()
 {
+  struct prices * prices;
+  struct pricer * pricer;
+  unsigned int choice;
+  int i = 1;
 
+  prices = prices_get_all();
+  menu_display_prices(prices, &i);
+
+  printf("Please select the Price you want to modify: ");
+  if((choice = getchoice()) == 0)
+  {
+    printf("No line\n");
+    return;
+  }
+  else
+  {
+    int j = 1;
+    P_EACH(pricer, prices)
+    {
+      if(choice == j)
+      {
+        admin_menu_price_choice(&pricer->price);
+        break;
+      }
+      j++;
+    }
+  }
 }
 
 void admin_menu_prices_delete()
 {
   struct prices * prices;
-  struct price * price;
+  struct pricer * pricer;
   unsigned int choice;
 
   int i = 1;
@@ -530,11 +613,11 @@ void admin_menu_prices_delete()
     else
     {
       int j = 1;
-      LIST_FOR_EACH(price, struct price, node, &prices->price_list)
+      P_EACH(pricer, prices)
       {
         if(choice == j)
         {
-          price_delete(price);
+          price_delete(&pricer->price);
           break;
         } 
         j++;
@@ -747,7 +830,7 @@ void admin_menu_listings_add()
   struct items * items;
   struct itemer * itemer;
   struct prices * prices;
-  struct price * price;
+  struct pricer * pricer;
 
   unsigned int item_choice;
   unsigned int price_choice;
@@ -792,11 +875,11 @@ void admin_menu_listings_add()
     if(item_choice == i)
     {
       j = 1;
-      LIST_FOR_EACH(price, struct price, node, &prices->price_list)
+      P_EACH(pricer, prices)
       {
         if(price_choice == j)
         {
-          listing_add(itemer->item.iid, price->price_id);
+          listing_add(itemer->item.iid, pricer->price.price_id);
         }
         j++;
       }
@@ -805,9 +888,95 @@ void admin_menu_listings_add()
   }
 }
 
+void admin_menu_listing_choice(struct listing * listing)
+{
+  struct items * items;
+  struct itemer * itemer;
+
+  struct prices * prices;
+  struct pricer * pricer;
+  
+  unsigned int item_choice;
+  unsigned int price_choice;
+
+  int i = 1;
+  int j = 1;
+
+  items = items_get_all();
+  menu_display_items(items, &i);
+
+  printf("Please select the Item you want to List: ");
+  if((item_choice = getchoice()) == 0)
+  {
+    printf("No line\n");
+    return;
+  }
+  else
+  {
+    i = 1;
+    prices = prices_get_all();
+    menu_display_prices(prices, &i);
+
+    printf("Please select the Price you want to List with: ");
+    if((price_choice = getchoice()) == 0)
+    {
+      printf("No line\n");
+      return;
+    }
+    else
+    {
+      i = 1;
+      I_EACH(itemer, items)
+      {
+        if(item_choice == i)
+        {
+          j = 1;
+          P_EACH(pricer, prices)
+          {
+            if(price_choice == j)
+            {
+              listing_modify(listing, itemer->item.iid, pricer->price.price_id);
+            }
+            j++;
+          }
+        }
+        i++;
+      }
+    }
+  }
+}
+
 void admin_menu_listings_modify()
 {
+  int i = 1;
+  unsigned int choice;
 
+  struct listings * listings;
+  struct listing * listing;
+
+  listings = listings_get_all();
+
+  menu_display_listings(listings, &i);
+
+  printf("Please select the Listing you want to modify: ");
+  if((choice = getchoice()) == 0)
+  {
+    printf("No line\n");
+    return;
+  }
+  else
+  {
+    int j = 1;
+    L_EACH(listing, listings)
+    {
+      if(choice == j)
+      {
+        admin_menu_listing_choice(listing);
+        break;
+      } 
+      j++;
+    }
+ }
 }
 
 void admin_menu_listings_delete()

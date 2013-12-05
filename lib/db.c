@@ -39,6 +39,12 @@ int db_query(char * buffer)
 {
   if(mysql_query(sock, buffer))
   {
+    // error when duplicate primary keys
+    if(mysql_errno(sock) == 1062)
+    {
+      return mysql_errno(sock);
+    }
+
     fprintf(stderr, "Query failed (%s)\n",mysql_error(sock));
     exit(1);
   }

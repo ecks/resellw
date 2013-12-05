@@ -22,6 +22,7 @@ extern struct listings * listings_get_all();
 extern struct listings * get_range_sell_price_listings_bid(char * low_price, char * high_price);
 extern struct listings * get_range_sell_price_listings_buy_now(char * low_price, char * high_price);
 extern struct listings * get_range_sell_price_listings(char * low_price, char * high_price);
+extern int listing_modify(struct listing * listing, char * iid, char * price_id);
 extern int listing_delete(struct listing * listing);
 extern int listings_delete(struct listings * listings);
 
