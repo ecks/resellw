@@ -48,8 +48,8 @@ struct listings * item_list_price_get(char * buffer)
     char * purchase_price = row[5];
     char * detail = row[6];
 
-    char * type_of_price = row[8];
-    char * sell_price = row[9];
+    char * type_of_price = row[7];
+    char * sell_price = row[8];
 
     listing = calloc(1, sizeof(struct listing));
     list_init(&listing->node);
@@ -97,28 +97,28 @@ struct listings * item_list_price_get(char * buffer)
 struct listings * listings_get_all()
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item natural join List natural join Price");
+  sprintf(buffer, "SELECT price_id,iid,upc,description,quantity,purchase_price,detail,type_of_price,sell_price FROM Item natural join List natural join Price");
   return item_list_price_get(buffer);
 }
 
 struct listings * get_range_sell_price_listings_bid(char * low_price, char * high_price)
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s AND type_of_price='bid'", low_price, high_price);
+  sprintf(buffer, "SELECT price_id,iid,upc,description,quantity,purchase_price,detail,type_of_price,sell_price FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s AND type_of_price='bid'", low_price, high_price);
   return item_list_price_get(buffer);
 }
 
 struct listings * get_range_sell_price_listings_buy_now(char * low_price, char * high_price)
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s AND type_of_price='buy now'", low_price, high_price);
+  sprintf(buffer, "SELECT price_id,iid,upc,description,quantity,purchase_price,detail,type_of_price,sell_price FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s AND type_of_price='buy now'", low_price, high_price);
   return item_list_price_get(buffer);
 }
 
 struct listings * get_range_sell_price_listings(char * low_price, char * high_price)
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s", low_price, high_price);
+  sprintf(buffer, "SELECT price_id,iid,upc,description,quantity,purchase_price,detail,type_of_price,sell_price FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s", low_price, high_price);
   return item_list_price_get(buffer);
 }
 

@@ -186,9 +186,9 @@ struct items * elec_get(char * buffer, struct items * items_par)
     char * purchase_price = row[4];
     char * detail = row[5];
 
-    char * serial_number = row[7];
-    char * electronic_type = row[8];
-    char * model = row[9];
+    char * serial_number = row[6];
+    char * electronic_type = row[7];
+    char * model = row[8];
 
     elec = calloc(1, sizeof(struct electronics));
 
@@ -311,7 +311,7 @@ struct item * item_get_iid(char * iid)
 struct items * items_electronics_get_all(struct items * items)
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item natural join Electronics");
+  sprintf(buffer, "SELECT iid,upc,description,quantity,purchase_price,detail,serial_number,electronic_type,model FROM Item natural join Electronics");
 
   return elec_get(buffer, items);
 }
@@ -366,8 +366,8 @@ struct items * cloth_get(char * buffer, struct items * items_par)
     char * purchase_price = row[4];
     char * detail = row[5];
 
-    char * clothing_brand = row[7];
-    char * size = row[8];
+    char * clothing_brand = row[6];
+    char * size = row[7];
 
     cloth = calloc(1, sizeof(struct clothing));
 
@@ -412,7 +412,7 @@ struct items * cloth_get(char * buffer, struct items * items_par)
 struct items * items_clothing_get_all(struct items * items)
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item natural join Clothing");
+  sprintf(buffer, "SELECT iid,upc,description,quantity,purchase_price,detail,clothing_brand,size FROM Item natural join Clothing");
 
   return cloth_get(buffer, items);
 }
@@ -467,8 +467,8 @@ struct items * bathbody_get(char * buffer, struct items * items_par)
     char * purchase_price = row[4];
     char * detail = row[5];
 
-    char * bathbody_brand = row[7];
-    char * feature = row[8];
+    char * bathbody_brand = row[6];
+    char * feature = row[7];
 
     bb = calloc(1, sizeof(struct bathbody));
 
@@ -513,7 +513,7 @@ struct items * bathbody_get(char * buffer, struct items * items_par)
 struct items * items_bathbody_get_all(struct items * items)
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item natural join BathBody");
+  sprintf(buffer, "SELECT iid,upc,description,quantity,purchase_price,detail,bathbody_brand,feature FROM Item natural join BathBody");
 
   return bathbody_get(buffer, items);
 }

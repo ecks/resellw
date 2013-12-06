@@ -80,7 +80,7 @@ struct storings * item_store_room_get(char * buffer)
     char * purchase_price = row[5];
     char * detail = row[6];
 
-    char * room_desc = row[8];
+    char * room_desc = row[7];
 
     storing = calloc(1, sizeof(struct storing));
 
@@ -144,11 +144,11 @@ struct item_rooms * elec_store_room_get(char * buffer)
     char * purchase_price = row[5];
     char * detail = row[6];
 
-    char * serial_number = row[8];
-    char * electronic_type = row[9];
-    char * model = row[10];
+    char * serial_number = row[7];
+    char * electronic_type = row[8];
+    char * model = row[9];
  
-    char * room_desc = row[11];
+    char * room_desc = row[10];
 
     elec_room = calloc(1, sizeof(struct electronics_room));
 
@@ -227,10 +227,10 @@ struct item_rooms * cloth_store_room_get(char * buffer)
     char * purchase_price = row[5];
     char * detail = row[6];
 
-    char * clothing_brand = row[8];
-    char * size = row[9];
+    char * clothing_brand = row[7];
+    char * size = row[8];
  
-    char * room_desc = row[10];
+    char * room_desc = row[9];
 
     cloth_room = calloc(1, sizeof(struct clothing_room));
 
@@ -306,10 +306,10 @@ struct item_rooms * bb_store_room_get(char * buffer)
     char * purchase_price = row[5];
     char * detail = row[6];
 
-    char * bathbody_brand = row[8];
-    char * feature = row[9];
+    char * bathbody_brand = row[7];
+    char * feature = row[8];
  
-    char * room_desc = row[10];
+    char * room_desc = row[9];
 
     bb_room = calloc(1, sizeof(struct clothing_room));
 
@@ -366,14 +366,14 @@ struct item_rooms * bb_store_room_get(char * buffer)
 struct storings * storings_get_all()
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item natural join Store natural join Room");
+  sprintf(buffer, "SELECT room_id,iid,upc,description,quantity,purchase_price,detail,room_description FROM Item natural join Store natural join Room");
   return item_store_room_get(buffer);
 }
 
 struct item_rooms * get_elec_model_storings(char * model)
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item natural join Electronics natural join Store natural join Room where model = '%s'", 
+  sprintf(buffer, "SELECT room_id,iid,upc,description,quantity,purchase_price,detail,serial_number,electronic_type,model,room_description FROM Item natural join Electronics natural join Store natural join Room where model = '%s'", 
                   model);
   return elec_store_room_get(buffer);
 }
@@ -381,7 +381,7 @@ struct item_rooms * get_elec_model_storings(char * model)
 struct item_rooms * get_cloth_brand_storings(char * clothing_brand)
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item natural join Clothing natural join Store natural join Room where clothing_brand = '%s'", 
+  sprintf(buffer, "SELECT room_id,iid,upc,description,quantity,purchase_price,detail,clothing_brand,size,room_description FROM Item natural join Clothing natural join Store natural join Room where clothing_brand = '%s'", 
                   clothing_brand);
   return cloth_store_room_get(buffer);
 }
@@ -389,7 +389,7 @@ struct item_rooms * get_cloth_brand_storings(char * clothing_brand)
 struct item_rooms * get_bb_brand_storings(char * bathbody_brand)
 {
   char buffer[200];
-  sprintf(buffer, "SELECT * FROM Item natural join BathBody natural join Store natural join Room where bathbody_brand = '%s'", 
+  sprintf(buffer, "SELECT room_id,iid,upc,description,quantity,purchase_price,detail,bathbody_brand,feature,room_description FROM Item natural join BathBody natural join Store natural join Room where bathbody_brand = '%s'", 
                   bathbody_brand);
   return bb_store_room_get(buffer);
 }
