@@ -11,7 +11,7 @@
 
 int storing_add(char * iid, char * room_id)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   int error;
 
   sprintf(buffer, "INSERT INTO Store (iid, room_id) VALUES (%s, %s)", iid, room_id);
@@ -365,14 +365,14 @@ struct item_rooms * bb_store_room_get(char * buffer)
 
 struct storings * storings_get_all()
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT room_id,iid,upc,description,quantity,purchase_price,detail,room_description FROM Item natural join Store natural join Room");
   return item_store_room_get(buffer);
 }
 
 struct item_rooms * get_elec_model_storings(char * model)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT room_id,iid,upc,description,quantity,purchase_price,detail,serial_number,electronic_type,model,room_description FROM Item natural join Electronics natural join Store natural join Room where model = '%s'", 
                   model);
   return elec_store_room_get(buffer);
@@ -380,7 +380,7 @@ struct item_rooms * get_elec_model_storings(char * model)
 
 struct item_rooms * get_cloth_brand_storings(char * clothing_brand)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT room_id,iid,upc,description,quantity,purchase_price,detail,clothing_brand,size,room_description FROM Item natural join Clothing natural join Store natural join Room where clothing_brand = '%s'", 
                   clothing_brand);
   return cloth_store_room_get(buffer);
@@ -388,7 +388,7 @@ struct item_rooms * get_cloth_brand_storings(char * clothing_brand)
 
 struct item_rooms * get_bb_brand_storings(char * bathbody_brand)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT room_id,iid,upc,description,quantity,purchase_price,detail,bathbody_brand,feature,room_description FROM Item natural join BathBody natural join Store natural join Room where bathbody_brand = '%s'", 
                   bathbody_brand);
   return bb_store_room_get(buffer);
@@ -396,7 +396,7 @@ struct item_rooms * get_bb_brand_storings(char * bathbody_brand)
 
 int storing_modify(struct storing * storing, char * iid, char * room_id)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   int error;
 
   sprintf(buffer, "Update Store SET iid=%s, room_id=%s where iid = '%s'", iid, room_id, storing->item.iid);
@@ -410,7 +410,7 @@ int storing_modify(struct storing * storing, char * iid, char * room_id)
 
 int storing_delete(struct storing * storing)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
 
   sprintf(buffer, "DELETE FROM Store where iid = '%s'", storing->item.iid);
   db_query(buffer); 

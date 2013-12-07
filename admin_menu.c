@@ -44,6 +44,11 @@ void admin_menu_items_add()
   printf("Purchase Price: ");
   purchase_price = getline();
 
+  if(strlen(desc) > 30)
+  {
+    printf("Description is too long, max character length is 30\n");
+    return;
+  }
   printf("Do you want to add additional details? (y/n) ");
   details = getline();
   if(strcmp(details, "y") == 0)

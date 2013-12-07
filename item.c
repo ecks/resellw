@@ -16,7 +16,7 @@ static struct items * items_bathbody_get_all(struct items * items);
 
 int item_add(char * upc, char * description, char * quantity, char * purchase_price, char * detail)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   struct items * items;
 
   items = items_get(upc, description, quantity, purchase_price);
@@ -45,7 +45,7 @@ int item_add(char * upc, char * description, char * quantity, char * purchase_pr
 
 int item_electronics_add(char * upc, char * description, char * quantity, char * purchase_price, char * serial_number, char * electronic_type, char * model)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   struct items * items;
   struct item * item;
 
@@ -64,7 +64,7 @@ int item_electronics_add(char * upc, char * description, char * quantity, char *
 
 int item_clothing_add(char * upc, char * description, char * quantity, char * purchase_price, char * clothing_brand, char * size)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   struct items * items;
   struct item * item;
 
@@ -83,7 +83,7 @@ int item_clothing_add(char * upc, char * description, char * quantity, char * pu
 
 int item_bathbody_add(char * upc, char * description, char * quantity, char * purchase_price, char * bathbody_brand, char * feature)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   struct items * items;
   struct item * item;
 
@@ -256,7 +256,7 @@ struct items * items_get_all_detailed()
 
 struct items * items_get(char * upc, char * description, char * quantity, char *  purchase_price)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT * FROM Item where upc = '%s' and description = '%s' and quantity = %s and purchase_price = %s", upc, description, quantity, purchase_price);
 
   return get(buffer);
@@ -264,7 +264,7 @@ struct items * items_get(char * upc, char * description, char * quantity, char *
 
 struct items * items_get_upc(char * upc)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT * FROM Item where upc = '%s'", upc);
 
   return get(buffer);
@@ -287,7 +287,7 @@ struct item * item_get(char * upc, char * description, char * quantity, char * p
 
 struct items * items_get_iid(char * iid)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT * FROM Item where iid = '%s'", iid);
 
   return get(buffer);
@@ -310,7 +310,7 @@ struct item * item_get_iid(char * iid)
 
 struct items * items_electronics_get_all(struct items * items)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT iid,upc,description,quantity,purchase_price,detail,serial_number,electronic_type,model FROM Item natural join Electronics");
 
   return elec_get(buffer, items);
@@ -318,7 +318,7 @@ struct items * items_electronics_get_all(struct items * items)
 
 struct items * items_electronics_get(char * upc, char * description, char * quantity, char * purchase_price)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT * FROM Item natural join Electronics where upc = '%s' and description = '%s' and quantity = %s and purchase_price = %s", 
                   upc, description, quantity, purchase_price);
   return elec_get(buffer, NULL);
@@ -411,7 +411,7 @@ struct items * cloth_get(char * buffer, struct items * items_par)
 
 struct items * items_clothing_get_all(struct items * items)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT iid,upc,description,quantity,purchase_price,detail,clothing_brand,size FROM Item natural join Clothing");
 
   return cloth_get(buffer, items);
@@ -419,7 +419,7 @@ struct items * items_clothing_get_all(struct items * items)
 
 struct items * items_clothing_get(char * upc, char * description, char * quantity, char * purchase_price)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT * FROM Item natural join Clothing where upc = '%s' and description = '%s' and quantity = %s and purchase_price = %s", 
                   upc, description, quantity, purchase_price);
   return cloth_get(buffer, NULL);
@@ -512,7 +512,7 @@ struct items * bathbody_get(char * buffer, struct items * items_par)
 
 struct items * items_bathbody_get_all(struct items * items)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT iid,upc,description,quantity,purchase_price,detail,bathbody_brand,feature FROM Item natural join BathBody");
 
   return bathbody_get(buffer, items);
@@ -520,7 +520,7 @@ struct items * items_bathbody_get_all(struct items * items)
 
 struct items * items_bathbody_get(char * upc, char * description, char * quantity, char * purchase_price)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT * FROM Item natural join BathBody where upc = '%s' and description = '%s' and quantity = %s and purchase_price = %s", 
                   upc, description, quantity, purchase_price);
   return bathbody_get(buffer, NULL);
@@ -542,7 +542,7 @@ struct bathbody * item_bathbody_get(char * upc, char * description, char * quant
 
 int item_modify(struct item * item, char * column, char * value)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "UPDATE Item SET %s='%s' WHERE iid=%s", column, value, item->iid);
   db_query(buffer);
   return 0;
@@ -550,7 +550,7 @@ int item_modify(struct item * item, char * column, char * value)
 
 int item_elec_modify(struct item * item, char * column, char * value)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "UPDATE Electronics SET %s='%s' WHERE iid=%s", column, value, item->iid);
   db_query(buffer);
   return 0;
@@ -558,7 +558,7 @@ int item_elec_modify(struct item * item, char * column, char * value)
 
 int item_clothing_modify(struct item * item, char * column, char * value)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "UPDATE Clothing SET %s='%s' WHERE iid=%s", column, value, item->iid);
   db_query(buffer);
   return 0;
@@ -566,7 +566,7 @@ int item_clothing_modify(struct item * item, char * column, char * value)
 
 int item_bathbody_modify(struct item * item, char * column, char * value)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "UPDATE BathBody SET %s='%s' WHERE iid=%s", column, value, item->iid);
   db_query(buffer);
   return 0;
@@ -574,7 +574,7 @@ int item_bathbody_modify(struct item * item, char * column, char * value)
 
 int item_delete(struct item * item)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
 
   sprintf(buffer, "DELETE FROM Item where iid = '%s'", item->iid);
   db_query(buffer); 
@@ -594,7 +594,7 @@ int items_delete(struct items * items)
 
 int item_electronics_delete(struct electronics * elec)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
 
   sprintf(buffer, "DELETE FROM Item where iid = '%s'", elec->item.iid);
   db_query(buffer); 
@@ -607,7 +607,7 @@ int item_electronics_delete(struct electronics * elec)
 
 int item_clothing_delete(struct clothing * cloth)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
 
   sprintf(buffer, "DELETE FROM Item where iid = '%s'", cloth->item.iid);
   db_query(buffer); 
@@ -620,7 +620,7 @@ int item_clothing_delete(struct clothing * cloth)
 
 int item_bathbody_delete(struct bathbody * bathbody)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
 
   sprintf(buffer, "DELETE FROM Item where iid = '%s'", bathbody->item.iid);
   db_query(buffer); 

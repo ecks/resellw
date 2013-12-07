@@ -13,7 +13,7 @@ static struct listings * get(char * buffer);
 
 int listing_add(char * iid, char * price_id)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   int error;
 
   sprintf(buffer, "INSERT INTO List (iid, price_id) VALUES (%s, %s)", iid, price_id);
@@ -96,35 +96,35 @@ struct listings * item_list_price_get(char * buffer)
 
 struct listings * listings_get_all()
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT price_id,iid,upc,description,quantity,purchase_price,detail,type_of_price,sell_price FROM Item natural join List natural join Price");
   return item_list_price_get(buffer);
 }
 
 struct listings * get_range_sell_price_listings_bid(char * low_price, char * high_price)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT price_id,iid,upc,description,quantity,purchase_price,detail,type_of_price,sell_price FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s AND type_of_price='bid'", low_price, high_price);
   return item_list_price_get(buffer);
 }
 
 struct listings * get_range_sell_price_listings_buy_now(char * low_price, char * high_price)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT price_id,iid,upc,description,quantity,purchase_price,detail,type_of_price,sell_price FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s AND type_of_price='buy now'", low_price, high_price);
   return item_list_price_get(buffer);
 }
 
 struct listings * get_range_sell_price_listings(char * low_price, char * high_price)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT price_id,iid,upc,description,quantity,purchase_price,detail,type_of_price,sell_price FROM Item natural join List natural join Price where sell_price BETWEEN %s AND %s", low_price, high_price);
   return item_list_price_get(buffer);
 }
 
 int listing_modify(struct listing * listing, char * iid, char * price_id)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   int error;
 
   sprintf(buffer, "Update List SET iid=%s, price_id=%s where price_id = '%s'", iid, price_id, listing->price.price_id);
@@ -139,7 +139,7 @@ int listing_modify(struct listing * listing, char * iid, char * price_id)
 
 int listing_delete(struct listing * listing)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
 
   sprintf(buffer, "DELETE FROM List where price_id = '%s'", listing->price.price_id);
   db_query(buffer); 

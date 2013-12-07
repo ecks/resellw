@@ -15,7 +15,7 @@ static struct prices * listed_get(char * buffer);
 
 int price_add_bid(char * sell_price)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
 
   sprintf(buffer, "INSERT INTO Price (type_of_price, sell_price) VALUES ('%s', %s)", "bid", sell_price);
   db_query(buffer); 
@@ -24,7 +24,7 @@ int price_add_bid(char * sell_price)
 
 int price_add_buy_now(char * sell_price)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
 
   sprintf(buffer, "INSERT INTO Price (type_of_price, sell_price) VALUES ('%s', %s)", "buy now", sell_price);
   db_query(buffer); 
@@ -73,14 +73,14 @@ struct prices * get(char * buffer)
 
 struct prices * prices_get_all()
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT * FROM Price");
   return get(buffer);
 }
 
 struct prices * prices_get_price_id(char * price_id)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT * FROM Price where price_id = '%s'", price_id);
   return get(buffer);
 }
@@ -101,7 +101,7 @@ struct price * price_get_price_id(char * price_id)
 
 int price_modify(struct price * price, char * column, char * value)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "UPDATE Price SET %s='%s' WHERE price_id=%s", column, value, price->price_id);
   db_query(buffer);
   return 0;
@@ -109,7 +109,7 @@ int price_modify(struct price * price, char * column, char * value)
     
 int price_delete(struct price * price)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
 
   sprintf(buffer, "DELETE FROM Price where price_id = '%s'", price->price_id);
   db_query(buffer); 

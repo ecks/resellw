@@ -12,7 +12,7 @@ static struct rooms * get(char * buffer);
 
 int room_add(char * room_desc)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
 
   sprintf(buffer, "INSERT INTO Room (room_description) VALUES ('%s')", room_desc);
   db_query(buffer); 
@@ -60,21 +60,21 @@ struct rooms * get(char * buffer)
 
 struct rooms * rooms_get_all()
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT * FROM Room");
   return get(buffer);
 }
 
 struct rooms * rooms_get(char * room_desc)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT * FROM Room where room_description = '%s'", room_desc);
   return get(buffer);
 }
 
 struct rooms * rooms_get_room_id(char * room_id)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
   sprintf(buffer, "SELECT * FROM Room where room_id = '%s'", room_id);
   return get(buffer);
 }
@@ -95,7 +95,7 @@ struct roomer * room_get_room_id(char * room_id)
 
 int room_modify(struct room * room, char * room_desc)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
 
   sprintf(buffer, "UPDATE Room SET room_description='%s' WHERE room_id = '%s'", room_desc, room->room_id);
   db_query(buffer); 
@@ -104,7 +104,7 @@ int room_modify(struct room * room, char * room_desc)
 
 int room_delete(struct room * room)
 {
-  char buffer[200];
+  char buffer[BUF_LEN];
 
   sprintf(buffer, "DELETE FROM Room where room_id = '%s'", room->room_id);
   db_query(buffer); 
